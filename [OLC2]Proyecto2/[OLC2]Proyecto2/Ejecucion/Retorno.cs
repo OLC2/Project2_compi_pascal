@@ -6,6 +6,8 @@ namespace _OLC2_Proyecto2.Ejecucion
 {
     class Retorno
     {
+        public String Temporal;
+        public String C3D;
         public String Tipo;
         public String Valor;
         public String Linea;
@@ -14,8 +16,10 @@ namespace _OLC2_Proyecto2.Ejecucion
         public Boolean Detener;
         public Boolean Retorna;
 
-        public Retorno(String Tipo, String Valor, String Linea, String Columna)
+        public Retorno(String Temporal, String C3D, String Tipo, String Valor, String Linea, String Columna)
         {
+            this.Temporal = Temporal;
+            this.C3D = C3D;
             this.Tipo = Tipo;
             this.Valor = Valor;
             this.Linea = Linea;

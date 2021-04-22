@@ -277,7 +277,7 @@ namespace _OLC2_Proyecto2.Arbol
                     if (Nodo.ChildNodes.Count == 4)
                     {
                         String td = getTipoDato(Nodo.ChildNodes[2]);
-                        Retorno asignar = new Retorno(td, getInicialDato(td), getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1]));
+                        Retorno asignar = new Retorno(Reservada.nulo, Reservada.nulo, td, getInicialDato(td), getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1]));
                         DeclaracionAsignacionData(tipoObj, td, asignar, Nodo.ChildNodes[0]);
                     }
                     //LSTID + dospuntos + TIPODATO + ToTerm("=") + CONDICION + puntocoma
@@ -329,7 +329,7 @@ namespace _OLC2_Proyecto2.Arbol
                                 if (ret.Tipo.Equals(tipodato)) //Si son del mismo tipo se pueden asignar (variable con variable)
                                 {
                                     //Debug.WriteLine("Se creo variable: " + id + " --> " + ret.Valor + " (" + ret.Tipo + ")");
-                                    variables.Add(new Simbolo(Reservada.byVal, id, ret.Valor, tipodato, Reservada.variable, getLinea(Nodo), getColumna(Nodo), true, null));
+                                    variables.Add(new Simbolo(-1, Reservada.byVal, id, ret.Valor, tipodato, Reservada.variable, getLinea(Nodo), getColumna(Nodo), true, null));
                                 }
                                 else
                                 {
@@ -443,7 +443,7 @@ namespace _OLC2_Proyecto2.Arbol
                         if (!ExisteSimbolo(id))
                         {
                             //Debug.WriteLine("Se creo parametro: " + tipoParam + " " + id + " --> " + getInicialDato(tipodato) + " (" + tipodato + ")");
-                            variables.Add(new Simbolo(tipoParam, id, getInicialDato(tipodato), tipodato, Reservada.parametro, getLinea(Nodo), getColumna(Nodo), true, null));    
+                            variables.Add(new Simbolo(-1,tipoParam, id, getInicialDato(tipodato), tipodato, Reservada.parametro, getLinea(Nodo), getColumna(Nodo), true, null));
                         }
                         else
                         {
@@ -503,11 +503,11 @@ namespace _OLC2_Proyecto2.Arbol
                             {
                                 if (condB1.Valor.Equals("True") && condB2.Valor.Equals("True")) // si ambos son true 
                                 {
-                                    return new Retorno(Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno true
+                                    return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno true
                                 }
                                 else
                                 {
-                                    return new Retorno(Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno false
+                                    return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno false
                                 }
                             }
                             else
@@ -538,11 +538,11 @@ namespace _OLC2_Proyecto2.Arbol
                             {
                                 if (condA1.Valor.Equals("False") && condA2.Valor.Equals("False")) // si ambos son false 
                                 {
-                                    return new Retorno(Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno false
+                                    return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno false
                                 }
                                 else
                                 {
-                                    return new Retorno(Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno true
+                                    return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno true
                                 }
                             }
                             else
@@ -579,11 +579,11 @@ namespace _OLC2_Proyecto2.Arbol
 
                                 if (val1 <= val2)
                                 {
-                                    return new Retorno(Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno true
+                                    return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno true
                                 }
                                 else
                                 {
-                                    return new Retorno(Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno false
+                                    return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno false
                                 }
                             }
                             else if ((condC1.Tipo.Equals(Reservada.Cadena) && condC2.Tipo.Equals(Reservada.Cadena)))    //Si ambos son String
@@ -593,11 +593,11 @@ namespace _OLC2_Proyecto2.Arbol
 
                                 if (v1 <= v2)
                                 {
-                                    return new Retorno(Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno true
+                                    return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno true
                                 }
                                 else
                                 {
-                                    return new Retorno(Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno false
+                                    return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno false
                                 }
                             }
                             else // valores no numericos
@@ -634,11 +634,11 @@ namespace _OLC2_Proyecto2.Arbol
 
                                 if (val1 >= val2)
                                 {
-                                    return new Retorno(Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno true
+                                    return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno true
                                 }
                                 else
                                 {
-                                    return new Retorno(Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno false
+                                    return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno false
                                 }
                             }
                             else if ((condD1.Tipo.Equals(Reservada.Cadena) && condD2.Tipo.Equals(Reservada.Cadena)))     //Si ambos son String
@@ -648,11 +648,11 @@ namespace _OLC2_Proyecto2.Arbol
 
                                 if (v1 >= v2)
                                 {
-                                    return new Retorno(Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno true
+                                    return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno true
                                 }
                                 else
                                 {
-                                    return new Retorno(Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno false
+                                    return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno false
                                 }
                             }
                             else // valores no numericos
@@ -689,11 +689,11 @@ namespace _OLC2_Proyecto2.Arbol
 
                                 if (val1 < val2)
                                 {
-                                    return new Retorno(Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno true
+                                    return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno true
                                 }
                                 else
                                 {
-                                    return new Retorno(Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno false
+                                    return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno false
                                 }
                             }
                             else if ((condE1.Tipo.Equals(Reservada.Cadena) && condE2.Tipo.Equals(Reservada.Cadena)))     //Si ambos son String
@@ -703,11 +703,11 @@ namespace _OLC2_Proyecto2.Arbol
 
                                 if (v1 < v2)
                                 {
-                                    return new Retorno(Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno true
+                                    return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno true
                                 }
                                 else
                                 {
-                                    return new Retorno(Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno false
+                                    return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno false
                                 }
                             }
                             else // valores no numericos
@@ -744,11 +744,11 @@ namespace _OLC2_Proyecto2.Arbol
 
                                 if (val1 > val2)
                                 {
-                                    return new Retorno(Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno True
+                                    return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno True
                                 }
                                 else
                                 {
-                                    return new Retorno(Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno False
+                                    return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno False
                                 }
                             }
                             else if ((condF1.Tipo.Equals(Reservada.Cadena) && condF2.Tipo.Equals(Reservada.Cadena)))     //Si ambos son String
@@ -758,11 +758,11 @@ namespace _OLC2_Proyecto2.Arbol
 
                                 if (v1 > v2)
                                 {
-                                    return new Retorno(Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno true
+                                    return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno true
                                 }
                                 else
                                 {
-                                    return new Retorno(Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno false
+                                    return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno false
                                 }
                             }
                             else // valores no numericos
@@ -799,11 +799,11 @@ namespace _OLC2_Proyecto2.Arbol
 
                                 if (val1 == val2)
                                 {
-                                    return new Retorno(Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno true
+                                    return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno true
                                 }
                                 else
                                 {
-                                    return new Retorno(Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno false
+                                    return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno false
                                 }
                             }
                             else if ((condG1.Tipo.Equals(Reservada.Cadena) && condG2.Tipo.Equals(Reservada.Cadena)) ||      //Si ambos son String
@@ -814,11 +814,11 @@ namespace _OLC2_Proyecto2.Arbol
 
                                 if (v1 == v2)
                                 {
-                                    return new Retorno(Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno true
+                                    return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno true
                                 }
                                 else
                                 {
-                                    return new Retorno(Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno false
+                                    return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno false
                                 }
                             }
                             else // valores no numericos
@@ -855,11 +855,11 @@ namespace _OLC2_Proyecto2.Arbol
 
                                 if (val1 != val2)
                                 {
-                                    return new Retorno(Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno true
+                                    return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno true
                                 }
                                 else
                                 {
-                                    return new Retorno(Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno True
+                                    return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno True
                                 }
                             }
                             else if ((condH1.Tipo.Equals(Reservada.Cadena) && condH2.Tipo.Equals(Reservada.Cadena)) ||      //Si ambos son String
@@ -870,11 +870,11 @@ namespace _OLC2_Proyecto2.Arbol
 
                                 if (v1 != v2)
                                 {
-                                    return new Retorno(Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno true
+                                    return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno true
                                 }
                                 else
                                 {
-                                    return new Retorno(Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno false
+                                    return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno false
                                 }
                             }
                             else // valores no numericos
@@ -908,11 +908,11 @@ namespace _OLC2_Proyecto2.Arbol
                     {
                         if (condB1.Tipo.Equals("True")) // si es true 
                         {
-                            return new Retorno(Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0])); //retorno False
+                            return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0])); //retorno False
                         }
                         else
                         {
-                            return new Retorno(Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0])); //retorno True
+                            return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0])); //retorno True
                         }
                     }
                     else
@@ -985,7 +985,7 @@ namespace _OLC2_Proyecto2.Arbol
                                 //    concat = GetOperable(ra1) + ra2.Valor;
                                 //}
                                 concat = GetOperable(ra1).Valor + GetOperable(ra2).Valor;
-                                return new Retorno(Reservada.Cadena, concat, linea1, colum1);
+                                return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Cadena, concat, linea1, colum1);
                             }
                             else if (ra1.Tipo.Equals(ra2.Tipo) && !ra1.Tipo.Equals(Reservada.Cadena)) // Si ambos son del mismo tipo y distinto de Cadena
                             {
@@ -993,27 +993,27 @@ namespace _OLC2_Proyecto2.Arbol
 
                                 if (ra1.Tipo.Equals(Reservada.Booleano))
                                 {
-                                    return new Retorno(Reservada.Booleano, suma + "", linea1, colum1);
+                                    return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Booleano, suma + "", linea1, colum1);
                                 }
                                 else
                                 {
-                                    return new Retorno(ra1.Tipo, suma + "", linea1, colum1);
+                                    return new Retorno(Reservada.nulo, Reservada.nulo, ra1.Tipo, suma + "", linea1, colum1);
                                 }
                             }
                             else if ((ra1.Tipo.Equals(Reservada.Booleano) && ra2.Tipo.Equals(Reservada.Real)) || (ra1.Tipo.Equals(Reservada.Real) && ra2.Tipo.Equals(Reservada.Booleano)))
                             {
                                 double suma = double.Parse(GetOperable(ra1).Valor) + double.Parse(GetOperable(ra2).Valor);
-                                return new Retorno(Reservada.Real, suma + "", linea1, colum1);
+                                return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Real, suma + "", linea1, colum1);
                             }
                             else if ((ra1.Tipo.Equals(Reservada.Booleano) && ra2.Tipo.Equals(Reservada.Entero)) || (ra1.Tipo.Equals(Reservada.Entero) && ra2.Tipo.Equals(Reservada.Booleano)))
                             {
                                 double suma = double.Parse(GetOperable(ra1).Valor) + double.Parse(GetOperable(ra2).Valor);
-                                return new Retorno(Reservada.Entero, suma + "", linea1, colum1);
+                                return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Entero, suma + "", linea1, colum1);
                             }
                             else if ((ra1.Tipo.Equals(Reservada.Real) && ra2.Tipo.Equals(Reservada.Entero)) || (ra1.Tipo.Equals(Reservada.Entero) && ra2.Tipo.Equals(Reservada.Real)))
                             {
                                 double suma = double.Parse(GetOperable(ra1).Valor) + double.Parse(GetOperable(ra2).Valor);
-                                return new Retorno(Reservada.Real, suma + "", linea1, colum1);
+                                return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Real, suma + "", linea1, colum1);
                             }
                             else //SENOS vino un error INESPERADO PAPU (aiuda!!!)
                             {
@@ -1045,14 +1045,14 @@ namespace _OLC2_Proyecto2.Arbol
                                 || (ra1.Tipo.Equals(Reservada.Entero) && ra2.Tipo.Equals(Reservada.Real)))
                             {
                                 double resta = double.Parse(GetOperable(ra1).Valor) - double.Parse(GetOperable(ra2).Valor);
-                                return new Retorno(Reservada.Real, resta + "", linea1, colum1);
+                                return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Real, resta + "", linea1, colum1);
                             }
                             else if ((ra1.Tipo.Equals(Reservada.Entero) && ra2.Tipo.Equals(Reservada.Entero)) //Cualquier combinacion de estos valores da Entero
                                 || (ra1.Tipo.Equals(Reservada.Booleano) && ra2.Tipo.Equals(Reservada.Entero))
                                 || (ra1.Tipo.Equals(Reservada.Entero) && ra2.Tipo.Equals(Reservada.Booleano)))
                             {
                                 double resta = double.Parse(GetOperable(ra1).Valor) - double.Parse(GetOperable(ra2).Valor);
-                                return new Retorno(Reservada.Entero, resta + "", linea1, colum1);
+                                return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Entero, resta + "", linea1, colum1);
                             }
                             else if ((ra1.Tipo.Equals(Reservada.Cadena) && ra2.Tipo.Equals(Reservada.Cadena)) //Cualquier combinacion de estos valores da Error
                                 || (ra1.Tipo.Equals(Reservada.Booleano) && ra2.Tipo.Equals(Reservada.Booleano))
@@ -1093,14 +1093,14 @@ namespace _OLC2_Proyecto2.Arbol
                                 || (ra1.Tipo.Equals(Reservada.Entero) && ra2.Tipo.Equals(Reservada.Real)))
                             {
                                 double mul = double.Parse(GetOperable(ra1).Valor) * double.Parse(GetOperable(ra2).Valor);
-                                return new Retorno(Reservada.Real, mul + "", linea1, colum1);
+                                return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Real, mul + "", linea1, colum1);
                             }
                             else if ((ra1.Tipo.Equals(Reservada.Entero) && ra2.Tipo.Equals(Reservada.Entero))     //Cualquier combinacion de estos valores da Entero
                                 || (ra1.Tipo.Equals(Reservada.Booleano) && ra2.Tipo.Equals(Reservada.Entero))
                                 || (ra1.Tipo.Equals(Reservada.Entero) && ra2.Tipo.Equals(Reservada.Booleano)))
                             {
                                 double mul = double.Parse(GetOperable(ra1).Valor) * double.Parse(GetOperable(ra2).Valor);
-                                return new Retorno(Reservada.Entero, mul + "", linea1, colum1);
+                                return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Entero, mul + "", linea1, colum1);
                             }
                             else if ((ra1.Tipo.Equals(Reservada.Cadena) && ra2.Tipo.Equals(Reservada.Cadena)) //Cualquier combinacion de estos valores da Error
                                 || (ra1.Tipo.Equals(Reservada.Booleano) && ra2.Tipo.Equals(Reservada.Booleano))
@@ -1144,7 +1144,7 @@ namespace _OLC2_Proyecto2.Arbol
                                 || (ra1.Tipo.Equals(Reservada.Entero) && ra2.Tipo.Equals(Reservada.Booleano)))
                             {
                                 double div = double.Parse(GetOperable(ra1).Valor) / double.Parse(GetOperable(ra2).Valor);
-                                return new Retorno(Reservada.Real, div + "", linea1, colum1);
+                                return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Real, div + "", linea1, colum1);
                             }
                             else if ((ra1.Tipo.Equals(Reservada.Cadena) && ra2.Tipo.Equals(Reservada.Cadena)) //Cualquier combinacion de estos valores da Error
                                 || (ra1.Tipo.Equals(Reservada.Booleano) && ra2.Tipo.Equals(Reservada.Booleano))
@@ -1190,7 +1190,7 @@ namespace _OLC2_Proyecto2.Arbol
                                 || (ra1.Tipo.Equals(Reservada.Entero) && ra2.Tipo.Equals(Reservada.Booleano)))
                             {
                                 double mod = double.Parse(GetOperable(ra1).Valor) % double.Parse(GetOperable(ra2).Valor);
-                                return new Retorno(Reservada.Real, mod + "", linea1, colum1);
+                                return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Real, mod + "", linea1, colum1);
                             }
                             else if ((ra1.Tipo.Equals(Reservada.Cadena) && ra2.Tipo.Equals(Reservada.Cadena)) //Cualquier combinacion de estos valores da Error
                                 || (ra1.Tipo.Equals(Reservada.Booleano) && ra2.Tipo.Equals(Reservada.Booleano))
@@ -1265,19 +1265,19 @@ namespace _OLC2_Proyecto2.Arbol
                     switch (Nodo.ChildNodes[0].Term.Name)
                     {
                         case "numero":
-                            return new Retorno(Reservada.Entero, Nodo.ChildNodes[0].Token.Value.ToString(), getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0]));
+                            return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Entero, Nodo.ChildNodes[0].Token.Value.ToString(), getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0]));
 
                         case "real":
-                            return new Retorno(Reservada.Real, Nodo.ChildNodes[0].Token.Value.ToString(), getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0]));
+                            return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Real, Nodo.ChildNodes[0].Token.Value.ToString(), getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0]));
 
                         case "cadena":
-                            return new Retorno(Reservada.Cadena, Nodo.ChildNodes[0].Token.Value.ToString(), getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0]));
+                            return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Cadena, Nodo.ChildNodes[0].Token.Value.ToString(), getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0]));
 
                         case "true":
-                            return new Retorno(Reservada.Booleano, Nodo.ChildNodes[0].Token.Value.ToString(), getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0]));
+                            return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Booleano, Nodo.ChildNodes[0].Token.Value.ToString(), getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0]));
 
                         case "false":
-                            return new Retorno(Reservada.Booleano, Nodo.ChildNodes[0].Token.Value.ToString(), getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0]));
+                            return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Booleano, Nodo.ChildNodes[0].Token.Value.ToString(), getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0]));
 
                         case "id": //Esto puede ser una VARIABLE o un ARREGLO
 
@@ -1295,15 +1295,15 @@ namespace _OLC2_Proyecto2.Arbol
                             if (sim != null)
                             {
                                 Debug.WriteLine("alto ahi sr, esto esta comentado!);
-                                return new Retorno(Reservada.Real, "5.5", "5", "5"); //BORRAR ESTE RETURN LUEGO
+                                return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Real, "5.5", "5", "5"); //BORRAR ESTE RETURN LUEGO
                                 
                                 if (sim.TipoObjeto.Equals(Reservada.arreglo))
                                 {
-                                    return new Retorno(Reservada.arreglo, id, getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0]));
+                                    return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.arreglo, id, getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0]));
                                 }
                                 else
                                 {
-                                    return new Retorno(sim.Tipo, sim.Valor, getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0]));
+                                    return new Retorno(Reservada.nulo, Reservada.nulo, sim.Tipo, sim.Valor, getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0]));
                                 }
                             }
                             else
@@ -1326,9 +1326,9 @@ namespace _OLC2_Proyecto2.Arbol
                     {
                         case "numero":
                             Debug.WriteLine(Nodo.ChildNodes[0].Term.Name + Nodo.ChildNodes[1].Token.Value.ToString() + " <<================= SE ESTA RETORNANDO UN NEGATIVO BIEN PRRON");
-                            return new Retorno(Reservada.Entero, Nodo.ChildNodes[0].Term.Name + Nodo.ChildNodes[1].Token.Value.ToString(), getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0]));
+                            return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Entero, Nodo.ChildNodes[0].Term.Name + Nodo.ChildNodes[1].Token.Value.ToString(), getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0]));
                         case "real":
-                            return new Retorno(Reservada.Real, Nodo.ChildNodes[0].Term.Name + Nodo.ChildNodes[1].Token.Value.ToString(), getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0]));
+                            return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Real, Nodo.ChildNodes[0].Term.Name + Nodo.ChildNodes[1].Token.Value.ToString(), getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0]));
                     }
                     #endregion
                     break;
@@ -1360,7 +1360,7 @@ namespace _OLC2_Proyecto2.Arbol
                                     cima = pilaSimbolos.Peek(); //Estableciendo la nueva tabla de simbolo cima
 
                                     return reto;// ORIGINALMENTE DEVOLVER ESTO PERRO
-                                    //return new Retorno(Reservada.Cadena, nameUsuario, getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0]));
+                                    //return new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Cadena, nameUsuario, getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0]));
                                 }
                                 else
                                 {
@@ -1382,7 +1382,7 @@ namespace _OLC2_Proyecto2.Arbol
 
                             if (ret != null)
                             {
-                                return new Retorno(ret.Tipo, ret.Valor, getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0]));
+                                return new Retorno(Reservada.nulo, Reservada.nulo, ret.Tipo, ret.Valor, getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0]));
                             }
                             else
                             {
@@ -1490,7 +1490,7 @@ namespace _OLC2_Proyecto2.Arbol
 
         private string getTipoDatoFunction(ParseTreeNode Nodo)
         {
-            switch(Nodo.ChildNodes[0].Term.Name)
+            switch (Nodo.ChildNodes[0].Term.Name)
             {
                 case "String":
                     return Reservada.Cadena;

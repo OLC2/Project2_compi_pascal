@@ -21,9 +21,9 @@ namespace _OLC2_Proyecto2.Ejecucion
             this.Detener = Detener;
         }
 
-        public void addSimbolo(string ambito, string nombre, string valor, string tipo, string tipoobjeto, string linea, string columna, Boolean visibilidad, List<Celda> arreglo)
+        public void addSimbolo(int apuntador, string ambito, string nombre, string valor, string tipo, string tipoobjeto, string linea, string columna, Boolean visibilidad, List<Celda> arreglo)
         {
-            ts.Add(new Simbolo(ambito, nombre, valor, tipo, tipoobjeto, linea, columna, visibilidad, arreglo));
+            ts.Add(new Simbolo(apuntador, ambito, nombre, valor, tipo, tipoobjeto, linea, columna, visibilidad, arreglo));
         }
 
         public List<Simbolo> getTS()

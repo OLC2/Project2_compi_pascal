@@ -57,11 +57,26 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="richTxtEntrada.Text" xml:space="preserve">
+    <value>program Alexander;
+
+    var i : integer = 10;
+    var calculo : real;
+    var cad : String = 'papurri';
+    var msg : String = 'ii';
+
+begin
+    calculo := 5*10-15/i/5+10/2*5;
+    writeln('Calculo: ', calculo);
+    writeln('Cadena: ', cad);
+    writeln('Mensaje: ', msg);
+end.</value>
+  </data>
   <assembly alias="System.Drawing.Common" name="System.Drawing.Common, Version=4.0.2.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51" />
   <data name="btnAnalizar.Image" type="System.Drawing.Bitmap, System.Drawing.Common" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wQAADsEBuJFr7QAABoNJREFUWEe9l9lPVHcUxwfmSf8BE9+NvvjSmto0VQFFiyiMuOIGgqYPrelLmyZN
+        vAAADrwBlbxySQAABoNJREFUWEe9l9lPVHcUxwfmSf8BE9+NvvjSmto0VQFFiyiMuOIGgqYPrelLmyZN
         06Q2LsAMMMw+d2aYjWEGqtVGfGi1G0btEk18QGgbW5fWFqu41IWZuff0e869gzModGgTf8nJHe693O/n
         fM9vNeW30PZeRCIXJaFtCbN/U7xE2dJjUjbH5yibYk3+jbGkb0N02FcXueddF1E9lrDqrg3fc9d0D7vW
         hFLO6lCzc3VwjnN1wOSqDpbYVypme6VSgjDp4TfUJrXunUlT947eXJSyeHBrjwmxILClJwCA2wAgAGgA
@@ -95,7 +110,7 @@
   <data name="button1.Image" type="System.Drawing.Bitmap, System.Drawing.Common" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wQAADsEBuJFr7QAABdlJREFUWEftlllQU1ccxulTX9qX9s3pTF/61pk+9L3buNSqWMti7dR2Op1Ose20
+        vAAADrwBlbxySQAABdlJREFUWEftlllQU1ccxulTX9qX9s3pTF/61pk+9L3buNSqWMti7dR2Op1Ose20
         HRBQZHO0WhFkFUGQPQQMwYgICdlIQggEQhCQNSzZ94SwBASvfj33kmC0iWJf63/mmwyTm/P7/ud853+J
         elWvarvOc999/5rA8E2LiqJ1jNNLfc1RUvHNSiq2qYeKYSuoI41y6jBLRkU3dFOHiA7Wd1MH6qTU/loJ
         9XmNmNpHtLdaRO2uElJv/N3aERWF1wKr76CyOcdaRhawuLwK99IKHIs+WNyLMDjdmLc5obPYMWG0Ykxv
@@ -126,7 +141,7 @@
   <data name="btnGraficarArbol.Image" type="System.Drawing.Bitmap, System.Drawing.Common" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wQAADsEBuJFr7QAAAg1JREFUWEftld0rQ2Ecx5/jZTvGJf+Et0svIVcrQptQkks3orZEYnLv3tuuZ4Vy
+        vAAADrwBlbxySQAAAg1JREFUWEftld0rQ2Ecx5/jZTvGJf+Et0svIVcrQptQkks3orZEYnLv3tuuZ4Vy
         MeFOkuFCXsqNGwo5EuVlM7Pk53lOZ3POc56z7cyjlH3rU6c9z/f3/e7ZcxrKKqs/pcgE6n31IB9miRM+
         MlMZn1xhD5p8nUDwG5DZSoyx8KYHlpkLeLYSYyym0SRv3koZ1poSYyyWyQyxHTfAe1AmFnTr1iUHWrpx
         IJ/kNLgTtMEsn+HNRAHyTK9L7SqcjDtBG1jge8L8nPBx7k0U+Ljw6tY1BdoZd4I20NwNCbBuzzcsEZkq

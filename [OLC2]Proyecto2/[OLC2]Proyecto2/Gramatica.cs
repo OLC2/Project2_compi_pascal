@@ -20,7 +20,7 @@ namespace _OLC2_Proyecto2
             KeyTerm menos = ToTerm("-");
             KeyTerm por = ToTerm("*");
             KeyTerm division = ToTerm("/");
-            KeyTerm modulo = ToTerm("%");
+            KeyTerm modulo = ToTerm("MOD");
             KeyTerm parentA = ToTerm("(");
             KeyTerm parentC = ToTerm(")");
             KeyTerm corchA = ToTerm("[");

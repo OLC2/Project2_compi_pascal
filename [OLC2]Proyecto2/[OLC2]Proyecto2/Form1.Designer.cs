@@ -36,6 +36,7 @@ namespace _OLC2_Proyecto2
             this.richTextConsola = new System.Windows.Forms.RichTextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.btnGraficarArbol = new System.Windows.Forms.Button();
+            this.richTxtEjecucion = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
             // 
             // richTxtEntrada
@@ -47,7 +48,7 @@ namespace _OLC2_Proyecto2
             this.richTxtEntrada.Name = "richTxtEntrada";
             this.richTxtEntrada.Size = new System.Drawing.Size(543, 402);
             this.richTxtEntrada.TabIndex = 0;
-            this.richTxtEntrada.Text = "";
+            this.richTxtEntrada.Text = resources.GetString("richTxtEntrada.Text");
             this.richTxtEntrada.WordWrap = false;
             // 
             // richTxtSalida
@@ -81,7 +82,7 @@ namespace _OLC2_Proyecto2
             this.richTextConsola.ForeColor = System.Drawing.Color.Lime;
             this.richTextConsola.Location = new System.Drawing.Point(12, 420);
             this.richTextConsola.Name = "richTextConsola";
-            this.richTextConsola.Size = new System.Drawing.Size(1147, 274);
+            this.richTextConsola.Size = new System.Drawing.Size(561, 274);
             this.richTextConsola.TabIndex = 3;
             this.richTextConsola.Text = "";
             // 
@@ -111,11 +112,24 @@ namespace _OLC2_Proyecto2
             this.btnGraficarArbol.UseVisualStyleBackColor = true;
             this.btnGraficarArbol.Click += new System.EventHandler(this.btnGraficarArbol_Click);
             // 
+            // richTxtEjecucion
+            // 
+            this.richTxtEjecucion.BackColor = System.Drawing.SystemColors.MenuText;
+            this.richTxtEjecucion.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.richTxtEjecucion.ForeColor = System.Drawing.Color.Lime;
+            this.richTxtEjecucion.Location = new System.Drawing.Point(591, 420);
+            this.richTxtEjecucion.Name = "richTxtEjecucion";
+            this.richTxtEjecucion.Size = new System.Drawing.Size(568, 274);
+            this.richTxtEjecucion.TabIndex = 6;
+            this.richTxtEjecucion.Text = "";
+            this.richTxtEjecucion.WordWrap = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1171, 706);
+            this.Controls.Add(this.richTxtEjecucion);
             this.Controls.Add(this.btnGraficarArbol);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.richTextConsola);
@@ -139,6 +153,7 @@ namespace _OLC2_Proyecto2
         private System.Windows.Forms.RichTextBox richTextConsola;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button btnGraficarArbol;
+        private System.Windows.Forms.RichTextBox richTxtEjecucion;
     }
 }
 

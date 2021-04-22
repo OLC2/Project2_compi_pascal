@@ -19,8 +19,6 @@ namespace _OLC2_Proyecto2.Arbol
     class Analisis : Grammar
     {
         public static List<TokenError> lista_errores = new List<TokenError>();
-        public static List<Error> lstErrorS1 = new List<Error>();
-        public static List<Error> lstErrorS2 = new List<Error>();
 
         //Para analizar
         public static ParseTree arbol = null;
@@ -29,7 +27,9 @@ namespace _OLC2_Proyecto2.Arbol
         private static ParseTreeNode raiz = null;
 
         //Entornos para ejecucion
-        private List<Entorno> entorno;
+        //private List<Entorno> entorno;
+
+        public Ejecutar ejecutar;
 
         public Boolean esCadenaValida(string cadena)
         {
@@ -92,40 +92,39 @@ namespace _OLC2_Proyecto2.Arbol
 
         public void EjecutarAccionesPerronas()
         {
-            AST ast = new AST();
-            
-            entorno = ast.CrearArbol(raiz);
+            ejecutar = new Ejecutar();
+            ejecutar.lstError.Clear();
 
-            if (entorno != null)
+
+            try
             {
-                Form1.Consola.AppendText("Analizando entornos \n");
-                Ejecucion ejecucion = new Ejecucion(entorno);
-                ejecucion.Procedure();
-                lstErrorS1 = ast.getErroresSemanticos();
-                lstErrorS2 = ejecucion.getErroresSemanticos();
-                ImprimirErrores();
+                if (ejecutar.pilaSimbolos != null)
+                    ejecutar.pilaSimbolos.Clear();
+                Console.WriteLine("Pila simbolos limpiada***");
             }
-            else
+            catch (Exception e)
             {
-                Form1.Consola.AppendText("Error -> Arbol de entornos nulo. \n");
+                Console.WriteLine("Pila simbolos limpia***");
             }
+
+            ejecutar.IniciarPrimeraPasada(raiz);//PRIMERA PASADA
+            //ejecutar.EjecutarX(arregloX);//EJECUTA LAS ACCIONES DEL MAIN
+            ImprimirErrores();
+
         }
 
         private void ImprimirErrores()
         {
-            Form1.Consola.AppendText("================== ERRORES SEMANTICOS STRUCTS ==================" + "\n");
-            Form1.Consola.AppendText("Linea" + "\t" + "Columna" + "\t" + "Tipo" + "\t\t" + "Descripcion" + "\n");
-            foreach (Error error in lstErrorS1)
+            if (ejecutar.lstError.Any())
             {
-                Form1.Consola.AppendText(error.Linea + "\t" + error.Columna + "\t" + error.Tipo + "\t" + error.Descripcion + "\n");
-            }
-            Form1.Consola.AppendText("================== ERRORES SEMANTICOS EXEC ==================" + "\n");
-            Form1.Consola.AppendText("Linea" + "\t" + "Columna" + "\t" + "Tipo" + "\t\t" + "Descripcion" + "\n");
-            foreach (Error error in lstErrorS2)
-            {
-                Form1.Consola.AppendText(error.Linea + "\t" + error.Columna + "\t" + error.Tipo + "\t" + error.Descripcion + "\n");
-            }
-            Form1.Consola.AppendText("** Finalizo errores **" + "\n");
+                Form1.Consola.AppendText("================== Errores Semanticos ==================" + "\n");
+                Form1.Consola.AppendText("Linea" + "\t" + "Columna" + "\t" + "Tipo" + "\t\t" + "Descripcion" + "\n");
+                foreach (Error error in ejecutar.lstError)
+                {
+                    Form1.Consola.AppendText(error.Linea + "\t" + error.Columna + "\t" + error.Tipo + "\t" + error.Descripcion + "\n");
+                }
+                Form1.Consola.AppendText("** Finalizo errores **" + "\n");
+            }                
         }
 
         public ParseTreeNode getArbol ()
@@ -221,38 +220,9 @@ namespace _OLC2_Proyecto2.Arbol
 
                 cont++;
             }
-            if (lstErrorS1.Any())
+            if (ejecutar.lstError.Any())
             {
-                foreach (Error error in lstErrorS1)
-                {
-                    clNumero = new PdfPCell(new Phrase(cont + "", _standardFont));
-                    clNumero.BorderWidth = 0;
-
-                    clTipo = new PdfPCell(new Phrase(error.Tipo, _standardFont));
-                    clTipo.BorderWidth = 1;
-
-                    clDescripcion = new PdfPCell(new Phrase(error.Descripcion, _standardFont));
-                    clDescripcion.BorderWidth = 0;
-
-                    clLinea = new PdfPCell(new Phrase(error.Linea, _standardFont));
-                    clLinea.BorderWidth = 1;
-
-                    clColumna = new PdfPCell(new Phrase(error.Columna, _standardFont));
-                    clColumna.BorderWidth = 0;
-
-                    // Añadimos las celdas a la tabla
-                    tblPrueba.AddCell(clNumero);
-                    tblPrueba.AddCell(clTipo);
-                    tblPrueba.AddCell(clDescripcion);
-                    tblPrueba.AddCell(clLinea);
-                    tblPrueba.AddCell(clColumna);
-
-                    cont++;
-                }
-            }
-            if (lstErrorS2.Any())
-            {
-                foreach (Error error in lstErrorS2)
+                foreach (Error error in ejecutar.lstError)
                 {
                     clNumero = new PdfPCell(new Phrase(cont + "", _standardFont));
                     clNumero.BorderWidth = 0;

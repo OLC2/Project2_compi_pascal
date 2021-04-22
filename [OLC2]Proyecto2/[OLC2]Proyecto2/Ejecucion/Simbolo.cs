@@ -6,6 +6,7 @@ namespace _OLC2_Proyecto2.Ejecucion
 {
     class Simbolo
     {
+        public int Apuntador;
         public String Ambito; //En caso de ser parametros (Por referencia (Cuando es referencia en el VALOR va el id de la variable referenciada) | Por valor), en caso de variables (Por valor)
         public String Nombre;
         public String Valor; //PARA UN ARREGLO EL VALOR SERAN LAS DIMENSIONES
@@ -16,8 +17,9 @@ namespace _OLC2_Proyecto2.Ejecucion
         public Boolean Activo;
         public List<Celda> Arreglo;
 
-        public Simbolo(string ambito, string nombre, string valor, string tipo, String tipoobjeto, string linea, string columna, Boolean activo, List<Celda> Arreglo)
+        public Simbolo(int apuntador, string ambito, string nombre, string valor, string tipo, String tipoobjeto, string linea, string columna, Boolean activo, List<Celda> Arreglo)
         {
+            this.Apuntador = apuntador;
             this.Ambito = ambito;
             this.Nombre = nombre;
             this.Valor = valor;

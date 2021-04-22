@@ -22,6 +22,7 @@ namespace _OLC2_Proyecto2
 
         public static RichTextBox Consola;
         public static RichTextBox Salida;
+        public static RichTextBox Impresiones;
         Analisis analisis = new Analisis();
 
         public Form1()
@@ -29,12 +30,14 @@ namespace _OLC2_Proyecto2
             InitializeComponent();
             Consola = richTextConsola;
             Salida = richTxtSalida;
+            Impresiones = richTxtEjecucion;
         }
 
         private void btnAnalizar_Click(object sender, EventArgs e)
         {
             richTextConsola.Clear();
             richTxtSalida.Clear();
+            richTxtEjecucion.Clear();
 
             Boolean resultado = analisis.esCadenaValida(richTxtEntrada.Text);
 

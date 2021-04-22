@@ -91,11 +91,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Alexander\\Downloads\\proyecto1_compi_pascal\\[OLC2]Proyecto2\\[OLC2]Proyecto2\\[OLC2]Proyecto2.csproj",
+      "projectUniqueName": "C:\\Users\\Alexander\\Documents\\OLC2\\Proyecto 2\\Project2_compi_pascal\\[OLC2]Proyecto2\\[OLC2]Proyecto2\\[OLC2]Proyecto2.csproj",
       "projectName": "[OLC2]Proyecto2",
-      "projectPath": "C:\\Users\\Alexander\\Downloads\\proyecto1_compi_pascal\\[OLC2]Proyecto2\\[OLC2]Proyecto2\\[OLC2]Proyecto2.csproj",
+      "projectPath": "C:\\Users\\Alexander\\Documents\\OLC2\\Proyecto 2\\Project2_compi_pascal\\[OLC2]Proyecto2\\[OLC2]Proyecto2\\[OLC2]Proyecto2.csproj",
       "packagesPath": "C:\\Users\\Alexander\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Alexander\\Downloads\\proyecto1_compi_pascal\\[OLC2]Proyecto2\\[OLC2]Proyecto2\\obj\\",
+      "outputPath": "C:\\Users\\Alexander\\Documents\\OLC2\\Proyecto 2\\Project2_compi_pascal\\[OLC2]Proyecto2\\[OLC2]Proyecto2\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -146,6 +146,12 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.NETCore.App.Host.win-x64",
+            "version": "[3.1.13, 3.1.13]"
+          }
+        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"

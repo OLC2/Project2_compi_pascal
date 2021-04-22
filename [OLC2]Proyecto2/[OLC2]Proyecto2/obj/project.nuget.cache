@@ -1,12 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "FvmqQaqyP9FeNZcikH3w9XWxasSfqwCXFY0b19K6Ri2IVPPO/K/7zOrBT+hhio0P3YJWZy8hd0pO9pOvSbpoKQ==",
+  "dgSpecHash": "9XdDHKRD81puXf8DlqWt5WPRVBogE/BCmIXHXib6RNA9EJXv8NsdZNGqgo3ZYRsmDwGQEs62mAITYRjULrVFsg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Alexander\\Downloads\\proyecto1_compi_pascal\\[OLC2]Proyecto2\\[OLC2]Proyecto2\\[OLC2]Proyecto2.csproj",
+  "projectFilePath": "C:\\Users\\Alexander\\Documents\\OLC2\\Proyecto 2\\Project2_compi_pascal\\[OLC2]Proyecto2\\[OLC2]Proyecto2\\[OLC2]Proyecto2.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Alexander\\.nuget\\packages\\bouncycastle\\1.8.6.1\\bouncycastle.1.8.6.1.nupkg.sha512",
     "C:\\Users\\Alexander\\.nuget\\packages\\itextsharp\\5.5.13.2\\itextsharp.5.5.13.2.nupkg.sha512",
-    "C:\\Users\\Alexander\\.nuget\\packages\\jacobslusser.scintillanet\\3.6.3\\jacobslusser.scintillanet.3.6.3.nupkg.sha512"
+    "C:\\Users\\Alexander\\.nuget\\packages\\jacobslusser.scintillanet\\3.6.3\\jacobslusser.scintillanet.3.6.3.nupkg.sha512",
+    "C:\\Users\\Alexander\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.13\\microsoft.netcore.app.host.win-x64.3.1.13.nupkg.sha512"
   ],
   "logs": [
     {
