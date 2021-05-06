@@ -329,7 +329,7 @@ namespace _OLC2_Proyecto2.Arbol
                                 if (ret.Tipo.Equals(tipodato)) //Si son del mismo tipo se pueden asignar (variable con variable)
                                 {
                                     //Debug.WriteLine("Se creo variable: " + id + " --> " + ret.Valor + " (" + ret.Tipo + ")");
-                                    variables.Add(new Simbolo(-1, Reservada.byVal, id, ret.Valor, tipodato, Reservada.variable, getLinea(Nodo), getColumna(Nodo), true, null));
+                                    variables.Add(new Simbolo(-1, -1, Reservada.byVal, id, ret.Valor, tipodato, Reservada.variable, getLinea(Nodo), getColumna(Nodo), true, null));
                                 }
                                 else
                                 {
@@ -443,7 +443,7 @@ namespace _OLC2_Proyecto2.Arbol
                         if (!ExisteSimbolo(id))
                         {
                             //Debug.WriteLine("Se creo parametro: " + tipoParam + " " + id + " --> " + getInicialDato(tipodato) + " (" + tipodato + ")");
-                            variables.Add(new Simbolo(-1,tipoParam, id, getInicialDato(tipodato), tipodato, Reservada.parametro, getLinea(Nodo), getColumna(Nodo), true, null));
+                            variables.Add(new Simbolo(-1,-1,tipoParam, id, getInicialDato(tipodato), tipodato, Reservada.parametro, getLinea(Nodo), getColumna(Nodo), true, null));
                         }
                         else
                         {

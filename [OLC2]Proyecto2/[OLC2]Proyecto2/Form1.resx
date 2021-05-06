@@ -58,18 +58,35 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="richTxtEntrada.Text" xml:space="preserve">
-    <value>program Alexander;
-
-    var i : integer = 10;
-    var calculo : real;
-    var cad : String = 'papurri';
+    <value>
+program Alexander;
     var msg : String = 'ii';
+    var b : Integer = 5;
+    var c : Integer = 10;
+    var d : Integer = 10;
+
+    function sumatoria(x:integer; y:integer; z:integer):integer;
+        var nuevo2 : integer = 50;
+        var nuevo3 : integer = 100;
+        var asig : integer;
+    begin
+        asig := nuevo2 + nuevo3;
+        Exit(7+7*2);
+    end;
+
+    function test2:string;
+        var resp : string = 'xy';
+    begin
+        writeln(resp);
+        resp := 'ab';
+        writeln(resp);
+        Exit('69');
+        //Exit(resp);
+    end;
 
 begin
-    calculo := 5*10-15/i/5+10/2*5;
-    writeln('Calculo: ', calculo);
-    writeln('Cadena: ', cad);
-    writeln('Mensaje: ', msg);
+    writeln('pp:', msg);
+    msg := test2();
 end.</value>
   </data>
   <assembly alias="System.Drawing.Common" name="System.Drawing.Common, Version=4.0.2.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51" />

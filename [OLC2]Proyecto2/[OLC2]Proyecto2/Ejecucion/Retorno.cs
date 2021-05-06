@@ -16,6 +16,9 @@ namespace _OLC2_Proyecto2.Ejecucion
         public Boolean Detener;
         public Boolean Retorna;
 
+        public string labelTrue;
+        public string labelFalse;
+        public string ifC3D;
         public Retorno(String Temporal, String C3D, String Tipo, String Valor, String Linea, String Columna)
         {
             this.Temporal = Temporal;
@@ -27,6 +30,9 @@ namespace _OLC2_Proyecto2.Ejecucion
             this.RetornaVal = false;
             this.Detener = false;
             this.Retorna = false;
+            this.labelTrue = Reservada.nulo;
+            this.labelFalse = Reservada.nulo;
+            this.ifC3D = Reservada.nulo;
         }
     }
 }

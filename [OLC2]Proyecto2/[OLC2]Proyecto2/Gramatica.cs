@@ -205,8 +205,9 @@ namespace _OLC2_Proyecto2
                     ;
 
             LISTIF.Rule = LISTIF + SENTENCIAS
-                | SENTENCIAS
-                | Empty;
+                    | SENTENCIAS
+                    | Empty
+                    ;
 
             ASIGNAR_PARAMETRO.Rule = ASIGNAR_PARAMETRO + coma + CONDICION
                                     | CONDICION

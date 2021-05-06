@@ -7,7 +7,7 @@ namespace _OLC2_Proyecto2.Ejecucion
 {
     class Parametro
     {
-        public String Ambito;
+        public String Ambito; //Valor o Referencia
         public String Nombre;
         public String Valor;
         public String Tipo;
@@ -15,7 +15,7 @@ namespace _OLC2_Proyecto2.Ejecucion
         public String Columna;
         public Boolean Activo;
 
-        public Parametro(string ambito, string nombre, string valor, string tipo, string linea, string columna, Boolean Activo)
+        public Parametro(string ambito, string nombre, string valor, string tipo, string linea, string columna)
         {
             this.Ambito = ambito;
             this.Nombre = nombre;
@@ -23,7 +23,6 @@ namespace _OLC2_Proyecto2.Ejecucion
             this.Tipo = tipo;
             this.Linea = linea;
             this.Columna = columna;
-            this.Activo = Activo;
         }
     }
 

@@ -158,7 +158,7 @@ namespace _OLC2_Proyecto2.Arbol
             doc.Add(new Paragraph("Creado por Alex Ixva"));
             doc.Add(Chunk.NEWLINE);
 
-            // Creamos una tabla que contendrá el nombre, apellido y país
+            // Creamos una tabla que nuestros listado de errores
             // de nuestros visitante.
             PdfPTable tblPrueba = new PdfPTable(5);
             tblPrueba.WidthPercentage = 100;

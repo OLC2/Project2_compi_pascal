@@ -39,6 +39,10 @@ namespace _OLC2_Proyecto2.Ejecucion
         public static string Cadena = "String";
         public static string Void = "Void";
 
+        public static string control = "true";
+        public static string State_Or = "or";
+        public static string State_And = "and";
+
         public static string nulo = "null";
         public static string ErrorSemantico = "Error Semantico";
     }
