@@ -58,8 +58,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="richTxtEntrada.Text" xml:space="preserve">
-    <value>
-program Alexander;
+    <value>program Alexander;
     var msg : String = 'ii';
     var b : Integer = 5;
     var c : Integer = 10;
@@ -71,22 +70,18 @@ program Alexander;
         var asig : integer;
     begin
         asig := nuevo2 + nuevo3;
+        if (5&gt;4 and 15&lt;=6 and 5&lt;8) then begin
+            writeln('TRUE');
+        end else begin
+            writeln('FALSE');
+        end;
         Exit(7+7*2);
-    end;
-
-    function test2:string;
-        var resp : string = 'xy';
-    begin
-        writeln(resp);
-        resp := 'ab';
-        writeln(resp);
-        Exit('69');
-        //Exit(resp);
     end;
 
 begin
     writeln('pp:', msg);
-    msg := test2();
+    writeln(sumatoria(b,c,d));
+
 end.</value>
   </data>
   <assembly alias="System.Drawing.Common" name="System.Drawing.Common, Version=4.0.2.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51" />
@@ -168,6 +163,21 @@ end.</value>
         4KwvB9bslqRsYI5aRDhuFeGE0KZF6te+rqkLeFBUbeBJGN+TlAXwkQVYZh48udIo8DKGSnCJVWzgdhLk
         m5Pw2840CtCiDbxRYoyFN0VpE0eiSoyx8H92gGHkwo0TrSoxxpKaUAnZiA08TyIqz8SzlZis/r0Q+gLH
         yH7xa3tKgwAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="btnOptimizar.Image" type="System.Drawing.Bitmap, System.Drawing.Common" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
+        vQAADr0BR/uQrQAAAh9JREFUWEfVVztOw0AQTYGEREWLOAKHoEUUQIuQAlkQh0jLDVCKnIICpHxMYSHs
+        VQqOwAEih5YqBcybjGHX2XUcR8nCk0aKdt7MrL0zz5vGv0HvqLcdqeQkUroTqXQUXetsqPQUht+8Rr4+
+        ccCVsNURX8a7g1ZyR8knVOirkhEXMYiVNPUQtdJzSpjNFahuGXJIuuqID+MteqVdR8J6RrmQU9KXQ4o/
+        uBINVfpBT3QfXSXHT029Dy4Mv7EGH3McschZaRPOJ1fpJ51r+/H2bUdoXoADLsfM5+kKzQ05cyuIuvy9
+        33w9EEplIAaxxXzenkDHEsFqOC5+8bInlKWBWMcmMud08KiZRHqFdZ68COQoHgdqiXuGmcgU5lwlbXE7
+        8XwzOqWGG8MGKj2TZSe4J6zcemKJFSucQUAnL2o4FDb4Y1l2ArmQ06yBmuLmHXZM55DGSVxemHyYLHvB
+        42vGUE1xYQOs7b9OmmlxeWHxyWTZC9YJM4ZqiouTWd0PYRHXD/IzN3kuA8fVEyxWNjcTF86Tv2g/Tpdi
+        VSmem6snWGEtjp6K6w9sgBYWHgFea5VNgLP0EYRvwsIYYmTE5YXFJ5NlL0rHENco00mvce1ChJri9kmx
+        LpXivCdgK0sxEPRjBAT/HANBLyQ56HWFu5IBrFghL6WAbCLMtdyE9MTm/5iYQMfyiBZ1osyIixhvt9cB
+        hIMVE7I9+3Zs5s/petFofAMQtz6M17RJ3gAAAABJRU5ErkJggg==
 </value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing.Common" mimetype="application/x-microsoft.net.object.bytearray.base64">

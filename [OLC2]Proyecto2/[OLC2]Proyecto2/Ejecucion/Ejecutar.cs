@@ -65,9 +65,11 @@ namespace _OLC2_Proyecto2.Ejecucion
 
             cadC3D += ("void main() { //Initial Program\n");
             cadC3D += ("//*** Inicia Declaracion de Variables Globales *** \n");
+            cadC3D += (getEtiqueta() + ":\n");
             InitialProgram(Nodo);
             cadC3D += ("//*** Finaliza Declaracion de Variables Globales *** \n\n");
             EjecutarX();
+            cadC3D += ("return;\n");
             cadC3D += ("}\n\n");
 
             string principal = "";
@@ -156,7 +158,7 @@ namespace _OLC2_Proyecto2.Ejecucion
                         #endregion
                         break;
                     case "SENTENCIAS":
-                        Debug.WriteLine("*** Iniciando Ejecucion de Sentencias ***");
+                        //Debug.WriteLine("*** Iniciando Ejecucion de Sentencias ***");
                         break;
                 }
             }
@@ -469,6 +471,7 @@ namespace _OLC2_Proyecto2.Ejecucion
                             nivelActual++; //Estableciendo el nivel actual
 
                             cadC3D += ("void " + id + "() {\n");
+                            cadC3D += (getEtiqueta() + ":\n");
 
                             paramsFunction3D(funct2.getParametros());
 
@@ -512,6 +515,7 @@ namespace _OLC2_Proyecto2.Ejecucion
                             nivelActual++; //Estableciendo el nivel actual
 
                             cadC3D += ("void " + id + "() {\n");
+                            cadC3D += (getEtiqueta() + ":\n");
 
                             varLocales(Nodo.ChildNodes[3]); //Escribe el C3D de las variables de la funcion
 
@@ -568,6 +572,7 @@ namespace _OLC2_Proyecto2.Ejecucion
                             nivelActual++; //Estableciendo el nivel actual
 
                             cadC3D += ("void " + id + "() {\n");
+                            cadC3D += (getEtiqueta() + ":\n");
 
                             paramsFunction3D(funct2.getParametros());
 
@@ -613,6 +618,7 @@ namespace _OLC2_Proyecto2.Ejecucion
                             nivelActual++; //Estableciendo el nivel actual
                             
                             cadC3D += ("void " + id + "() {\n");
+                            cadC3D += (getEtiqueta() + ":\n");
 
                             varLocales(Nodo.ChildNodes[5]); //Escribe el C3D de las variables de la funcion
 
@@ -1140,26 +1146,27 @@ namespace _OLC2_Proyecto2.Ejecucion
                             switch (Nodo.ChildNodes[0].Term.Name)
                             {
                                 case "continue":
-                                    //RetornoAc retornoR = new RetornoAc("-", "-", getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0]));
-                                    //retornoR.Retorna = true;
-                                    //return retornoR;
+                                    if (cima.Continuar)
+                                    {
+                                        cadC3D += "goto " + cima.etiquetaContinue + "; //Salto Continue\n";
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Error Semantico-->Instruccion Continue no valida en ambito linea:" + getLinea(Nodo.ChildNodes[0]) + " columna:" + getColumna(Nodo.ChildNodes[0]));
+                                        lstError.Add(new Error(Reservada.ErrorSemantico, "Instruccion Continue no valida en ambito", getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0])));
+                                    }
                                     break;
                                 case "break":
 
                                     if (cima.Detener)
                                     {
-                                        cadC3D += "goto " + cima.etiquetaBreak + ";\n";
+                                        cadC3D += "goto " + cima.etiquetaBreak + "; //Salto Break\n";
                                     }
                                     else
                                     {
-                                        Console.WriteLine("Error Semantico-->Instruccion no valida en ambito linea:" + getLinea(Nodo.ChildNodes[0]) + " columna:" + getColumna(Nodo.ChildNodes[0]));
-                                        lstError.Add(new Error(Reservada.ErrorSemantico, "Instruccion no valida en ambito", getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0])));
+                                        Console.WriteLine("Error Semantico-->Instruccion Break no valida en ambito linea:" + getLinea(Nodo.ChildNodes[0]) + " columna:" + getColumna(Nodo.ChildNodes[0]));
+                                        lstError.Add(new Error(Reservada.ErrorSemantico, "Instruccion Break no valida en ambito", getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0])));
                                     }
-                                    /*
-                                    RetornoAc retornoB = new RetornoAc("-", "-", getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0]));
-                                    retornoB.Detener = true;
-                                    return retornoB;
-                                    */
                                     break;
                             }
                             #endregion
@@ -1182,7 +1189,7 @@ namespace _OLC2_Proyecto2.Ejecucion
                                 if (var == null) //Si no existe en mi nivel actual busco en las globales
                                 {
                                     var = cimaG.RetornarSimbolo(id4);
-                                    Debug.WriteLine(">>> Se busco en las globales <<<");
+                                    //Debug.WriteLine(">>> Se busco en las globales <<<");
                                 }
 
                                 if (var != null) //Si la variable existe
@@ -1350,36 +1357,37 @@ namespace _OLC2_Proyecto2.Ejecucion
                                 case "repeat":
                                     //ToTerm("repeat") + SENTENCIAS + ToTerm("until") + CONDICION + puntocoma
                                     #region
+                                    cadC3D += "//==================== Inicio de repeat ==================\n";
+                                    string lblBreak = getEtiqueta(); //Etiqueta de salto de break, tambien sirve para detener el ciclo while
+                                    string lblContinue = getEtiqueta(); //Etiqueta de salto de continue
+
+                                    string lblLoop = getEtiqueta(); //Etiqueta para mantener el ciclo repeat
+                                    cadC3D += lblLoop + ":\n";
+
+                                    TablaSimbolos dowhilee = new TablaSimbolos(nivelActual, Reservada.Repeat, Reservada.nulo, cima.Retorna, true, cima.etiquetaExit, lblBreak);
+                                    dowhilee.etiquetaContinue = lblContinue;
+                                    dowhilee.Continuar = true;
+                                    pilaSimbolos.Push(dowhilee);
+                                    cima = dowhilee; //Estableciendo la tabla de simbolos cima
+
+                                    RetornoAc ret1 = Sentencias(Nodo.ChildNodes[1]); // Las sentencias se ejecutan al menos una vez en el Do-While
+
+                                    pilaSimbolos.Pop(); //Eliminando la tabla de simbolos cima actual
+                                    cima = pilaSimbolos.Peek(); //Estableciendo la nueva tabla de simbolo cima
+
+                                    cadC3D += lblContinue + ":\n";      //Sirve para Continue y para que funcione el ciclo while
                                     Retorno condW = Condicion(Nodo.ChildNodes[3]);
                                     if (condW != null)
                                     {
                                         if (condW.Tipo.Equals(Reservada.Booleano)) // Si la condicion es booleana
                                         {
-                                            /*
-                                            TablaSimbolos dowhilee = new TablaSimbolos(nivelActual, Reservada.Repeat, cimaEnt.IsRetorno, true);
-                                            pilaSimbolos.Push(dowhilee);
-                                            cimaTS = dowhilee; //Estableciendo la tabla de simbolos cima
-                                                               //nivelActual = 1; //Estableciendo el nivel actual <<-- No en este caso de Do-While
+                                            evaluarCondicion(condW);
+                                            cadC3D += condW.labelTrue + ":\n";                  //True
+                                            cadC3D += "goto " + lblLoop + ";\n";
+                                            cadC3D += condW.labelFalse + ": //End repeat\n";                 //False
+                                            cadC3D += lblBreak + ": //Break\n";                 //Brake
 
-                                            RetornoAc ret1 = Sentencias(Nodo.ChildNodes[1]); // Las sentencias se ejecutan al menos una vez en el Do-While
-
-                                            if (ret1.Retorna)
-                                            {
-                                                pilaSimbolos.Pop(); //Eliminando la tabla de simbolos cima actual
-                                                cimaTS = pilaSimbolos.Peek(); //Estableciendo la nueva tabla de simbolo cima
-                                                return ret1;
-                                            }
-                                            else if (ret1.Detener)
-                                            {
-                                                pilaSimbolos.Pop(); //Eliminando la tabla de simbolos cima actual
-                                                cimaTS = pilaSimbolos.Peek(); //Estableciendo la nueva tabla de simbolo cima
-                                                break;
-                                            }
-
-                                            pilaSimbolos.Pop(); //Eliminando la tabla de simbolos cima actual
-                                            cimaTS = pilaSimbolos.Peek(); //Estableciendo la nueva tabla de simbolo cima
-                                            */
-
+                                            cadC3D += "//====================== Fin de repeat ===================\n";
                                         }
                                         else
                                         {
@@ -1535,12 +1543,15 @@ namespace _OLC2_Proyecto2.Ejecucion
                             {
                                 case "if":
                                     #region
+                                    cadC3D += "//====================== Inicio de if ===================\n";
                                     Retorno cond8 = Condicion(Nodo.ChildNodes[1]);
                                     if (cond8 != null)
                                     {
                                         if (cond8.Tipo.Equals(Reservada.Booleano)) // Si la condicion es booleana
                                         {
                                             TablaSimbolos iff = new TablaSimbolos(nivelActual, Reservada.Iff, Reservada.nulo, cima.Retorna, cima.Detener, cima.etiquetaExit, cima.etiquetaBreak);
+                                            iff.Continuar = cima.Continuar;
+                                            iff.etiquetaContinue = cima.etiquetaContinue;
                                             pilaSimbolos.Push(iff);
                                             cima = iff; //Estableciendo la tabla de simbolos cima
                                             evaluarCondicion(cond8);
@@ -1551,6 +1562,7 @@ namespace _OLC2_Proyecto2.Ejecucion
                                             pilaSimbolos.Pop(); //Eliminando la tabla de simbolos cima actual
                                             cima = pilaSimbolos.Peek(); //Estableciendo la nueva tabla de simbolo cima
                                             
+                                            cadC3D += "//======================= Fin de if =====================\n";
                                         }
                                         else
                                         {
@@ -1571,7 +1583,7 @@ namespace _OLC2_Proyecto2.Ejecucion
                                     #region
                                     cadC3D += "//==================== Inicio de while ===================\n";
                                     string lblContinue = getEtiqueta(); //Etiqueta de salto de continue, tambien sirve para mantener el ciclo while
-                                    cadC3D += lblContinue + ":\n";                  //Sirve para Continue y para que funcione el ciclo while
+                                    cadC3D += lblContinue + ":\n";      //Sirve para Continue y para que funcione el ciclo while
 
                                     Retorno cond7 = Condicion(Nodo.ChildNodes[1]);
 
@@ -1582,17 +1594,18 @@ namespace _OLC2_Proyecto2.Ejecucion
                                             //string lblBreak = getEtiqueta(); //Etiqueta de salto de break, tambien para el final de while
                                             
                                             TablaSimbolos whilee = new TablaSimbolos(nivelActual, Reservada.Whilee, Reservada.nulo, cima.Retorna, true, cima.etiquetaExit, cond7.labelFalse);
+                                            whilee.etiquetaContinue = lblContinue;
+                                            whilee.Continuar = true;
                                             pilaSimbolos.Push(whilee);
                                             cima = whilee; //Estableciendo la tabla de simbolos cima
-                                                           //nivelActual = 1; //Estableciendo el nivel actual <<-- No en este caso de While
-
+                                            
                                             evaluarCondicion(cond7);
                                             cadC3D += cond7.labelTrue + ":\n";                  //True
 
                                             RetornoAc ret1 = Sentencias(Nodo.ChildNodes[4]);
 
                                             cadC3D += "goto " + lblContinue + ";\n";                      //Enciclado de while
-                                            cadC3D += cond7.labelFalse + ":\n";                 //False
+                                            cadC3D += cond7.labelFalse + ": //End while\n";                 //False
 
                                             cadC3D += "//===================== Fin de while =====================\n";
 
@@ -1634,6 +1647,8 @@ namespace _OLC2_Proyecto2.Ejecucion
                                 case "if":
                                     //ToTerm("if") + CONDICION + ToTerm("then") + ToTerm("begin") + SENTENCIAS + ToTerm("end") + ToTerm("else") + ToTerm("begin") + SENTENCIAS + ToTerm("end") + puntocoma
                                     #region
+                                    cadC3D += "//===================== Inicio de if =====================\n";
+
                                     Retorno cond11 = Condicion(Nodo.ChildNodes[1]);
 
                                     if (cond11 != null)
@@ -1641,11 +1656,11 @@ namespace _OLC2_Proyecto2.Ejecucion
                                         if (cond11.Tipo.Equals(Reservada.Booleano)) // Si la condicion es booleana
                                         {
                                             TablaSimbolos iff = new TablaSimbolos(nivelActual, Reservada.Iff, Reservada.nulo, cima.Retorna, cima.Detener, cima.etiquetaExit, cima.etiquetaBreak);
+                                            iff.Continuar = cima.Continuar;
+                                            iff.etiquetaContinue = cima.etiquetaContinue;
                                             pilaSimbolos.Push(iff);
                                             cima = iff; //Estableciendo la tabla de simbolos cima
-
-                                            cadC3D += "//===================== Inicio de if =====================\n";
-
+                                            
                                             string lblFin = getEtiqueta(); //Temporal para finalizar todo el if
                                             evaluarCondicion(cond11);
                                             cadC3D += cond11.labelTrue + ":\n";                 //True
@@ -1712,7 +1727,6 @@ namespace _OLC2_Proyecto2.Ejecucion
                 switch (Nodo.ChildNodes[0].Term.Name)
                 {
                     case "CONDICION": // MakePlusRule(CONDICION, ToTerm("and"), COND1);
-                        Debug.WriteLine("AND");
                         #region
                         Retorno condB1 = Condicion(Nodo.ChildNodes[0]);
                         Retorno condB2 = Condicion(Nodo.ChildNodes[2]);
@@ -1721,8 +1735,6 @@ namespace _OLC2_Proyecto2.Ejecucion
                         {
                             if (condB1.Tipo.Equals(Reservada.Booleano) && condB2.Tipo.Equals(Reservada.Booleano)) // si ambos son booleanos
                             {
-                                Debug.WriteLine("OPERANDO AND");
-
                                 Retorno re = new Retorno(Reservada.control, Reservada.State_And, Reservada.Booleano, Reservada.nulo, getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1]));
 
                                 if (!condB1.Temporal.Equals(Reservada.control) && !condB2.Temporal.Equals(Reservada.control))
@@ -1800,7 +1812,6 @@ namespace _OLC2_Proyecto2.Ejecucion
                         #endregion
 
                     case "COND1": // MakePlusRule(COND1, ToTerm("or"), COND2);
-                        Debug.WriteLine("OR");
                         #region
                         Retorno condA1 = Condicion(Nodo.ChildNodes[0]);
                         Retorno condA2 = Condicion(Nodo.ChildNodes[2]);
@@ -1809,8 +1820,6 @@ namespace _OLC2_Proyecto2.Ejecucion
                         {
                             if (condA1.Tipo.Equals(Reservada.Booleano) && condA2.Tipo.Equals(Reservada.Booleano)) // si ambos son booleanos
                             {
-                                Debug.WriteLine("OPERANDO OR");
-
                                 Retorno re = new Retorno(Reservada.control, Reservada.State_Or, Reservada.Booleano, Reservada.nulo, getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1]));
 
                                 if (!condA1.Temporal.Equals(Reservada.control) && !condA2.Temporal.Equals(Reservada.control))
@@ -1888,7 +1897,6 @@ namespace _OLC2_Proyecto2.Ejecucion
                         #endregion
 
                     case "COND3": // MakePlusRule(COND3, ToTerm("<="), COND4);
-                        Debug.WriteLine("<=");
                         #region
                         Retorno condC1 = Condicion(Nodo.ChildNodes[0]);
                         Retorno condC2 = Condicion(Nodo.ChildNodes[2]);
@@ -1908,23 +1916,6 @@ namespace _OLC2_Proyecto2.Ejecucion
                                 re.labelFalse = labelF;
                                 re.ifC3D = labelC3D(condC1, condC2, "<=");
                                 return re;
-                                /*
-                                double val1 = double.Parse(condC1.Valor);
-                                double val2 = double.Parse(condC2.Valor);
-
-                                if (val1 <= val2)
-                                {
-                                    string tmp = getTemp();
-                                    string c3d = getC3D(tmp, condC1, "<=", condC2);
-                                    return new Retorno(tmp, c3d, Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno true
-                                }
-                                else
-                                {
-                                    string tmp = getTemp();
-                                    string c3d = getC3D(tmp, condC1, "<=", condC2);
-                                    return new Retorno(tmp, c3d, Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno false
-                                }
-                                */
                             }
                             else if ((condC1.Tipo.Equals(Reservada.Cadena) && condC2.Tipo.Equals(Reservada.Cadena)))    //Si ambos son String
                             {
@@ -1936,23 +1927,6 @@ namespace _OLC2_Proyecto2.Ejecucion
                                 re.labelFalse = labelF;
                                 re.ifC3D = labelC3D(condC1, condC2, "<=");
                                 return re;
-                                /*
-                                int v1 = getCantAscii(condC1.Valor);
-                                int v2 = getCantAscii(condC2.Valor);
-
-                                if (v1 <= v2)
-                                {
-                                    string tmp = getTemp();
-                                    string c3d = getC3D(tmp, condC1, "<=", condC2);
-                                    return new Retorno(tmp, c3d, Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno true
-                                }
-                                else
-                                {
-                                    string tmp = getTemp();
-                                    string c3d = getC3D(tmp, condC1, "<=", condC2);
-                                    return new Retorno(tmp, c3d, Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno false
-                                }
-                                */
                             }
                             else // valores no numericos
                             {
@@ -1972,7 +1946,6 @@ namespace _OLC2_Proyecto2.Ejecucion
                         #endregion
 
                     case "COND4": // MakePlusRule(COND4, ToTerm(">="), COND5);
-                        Debug.WriteLine(">=");
                         #region
                         Retorno condD1 = Condicion(Nodo.ChildNodes[0]);
                         Retorno condD2 = Condicion(Nodo.ChildNodes[2]);
@@ -1992,23 +1965,6 @@ namespace _OLC2_Proyecto2.Ejecucion
                                 re.labelFalse = labelF;
                                 re.ifC3D = labelC3D(condD1, condD2, ">=");
                                 return re;
-                                /*
-                                double val1 = double.Parse(condD1.Valor);
-                                double val2 = double.Parse(condD2.Valor);
-
-                                if (val1 >= val2)
-                                {
-                                    string tmp = getTemp();
-                                    string c3d = getC3D(tmp, condD1, ">=", condD2);
-                                    return new Retorno(tmp, c3d, Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno true
-                                }
-                                else
-                                {
-                                    string tmp = getTemp();
-                                    string c3d = getC3D(tmp, condD1, ">=", condD2);
-                                    return new Retorno(tmp, c3d, Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno false
-                                }
-                                */
                             }
                             else if ((condD1.Tipo.Equals(Reservada.Cadena) && condD2.Tipo.Equals(Reservada.Cadena)))     //Si ambos son String
                             {
@@ -2020,23 +1976,6 @@ namespace _OLC2_Proyecto2.Ejecucion
                                 re.labelFalse = labelF;
                                 re.ifC3D = labelC3D(condD1, condD2, ">=");
                                 return re;
-                                /*
-                                int v1 = getCantAscii(condD1.Valor);
-                                int v2 = getCantAscii(condD2.Valor);
-
-                                if (v1 >= v2)
-                                {
-                                    string tmp = getTemp();
-                                    string c3d = getC3D(tmp, condD1, ">=", condD2);
-                                    return new Retorno(tmp, c3d, Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno true
-                                }
-                                else
-                                {
-                                    string tmp = getTemp();
-                                    string c3d = getC3D(tmp, condD1, ">=", condD2);
-                                    return new Retorno(tmp, c3d, Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno false
-                                }
-                                */
                             }
                             else // valores no numericos
                             {
@@ -2056,7 +1995,6 @@ namespace _OLC2_Proyecto2.Ejecucion
                     #endregion
 
                     case "COND5": // MakePlusRule(COND5, ToTerm("<"), COND6);
-                        Debug.WriteLine("<");
                         #region
                         Retorno condE1 = Condicion(Nodo.ChildNodes[0]);//COND6
                         Retorno condE2 = Condicion(Nodo.ChildNodes[2]);//COND7
@@ -2076,23 +2014,6 @@ namespace _OLC2_Proyecto2.Ejecucion
                                 re.labelFalse = labelF;
                                 re.ifC3D = labelC3D(condE1, condE2, "<");
                                 return re;
-                                /*
-                                double val1 = double.Parse(condE1.Valor);
-                                double val2 = double.Parse(condE2.Valor);
-
-                                if (val1 < val2)
-                                {
-                                    string tmp = getTemp();
-                                    string c3d = getC3D(tmp, condE1, "<", condE2);
-                                    return new Retorno(tmp, c3d, Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno true
-                                }
-                                else
-                                {
-                                    string tmp = getTemp();
-                                    string c3d = getC3D(tmp, condE1, "<", condE2);
-                                    return new Retorno(tmp, c3d, Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno false
-                                }
-                                */
                             }
                             else if ((condE1.Tipo.Equals(Reservada.Cadena) && condE2.Tipo.Equals(Reservada.Cadena)))     //Si ambos son String
                             {
@@ -2104,23 +2025,6 @@ namespace _OLC2_Proyecto2.Ejecucion
                                 re.labelFalse = labelF;
                                 re.ifC3D = labelC3D(condE1, condE2, "<");
                                 return re;
-                                /*
-                                int v1 = getCantAscii(condE1.Valor);
-                                int v2 = getCantAscii(condE2.Valor);
-
-                                if (v1 < v2)
-                                {
-                                    string tmp = getTemp();
-                                    string c3d = getC3D(tmp, condE1, "<", condE2);
-                                    return new Retorno(tmp, c3d, Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno true
-                                }
-                                else
-                                {
-                                    string tmp = getTemp();
-                                    string c3d = getC3D(tmp, condE1, "<", condE2);
-                                    return new Retorno(tmp, c3d, Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno false
-                                }
-                                */
                             }
                             else // valores no numericos
                             {
@@ -2140,7 +2044,6 @@ namespace _OLC2_Proyecto2.Ejecucion
                     #endregion
 
                     case "COND6": // MakePlusRule(COND6, ToTerm(">"), COND7);
-                        Debug.WriteLine(">");
                         #region
                         Retorno condF1 = Condicion(Nodo.ChildNodes[0]);
                         Retorno condF2 = Condicion(Nodo.ChildNodes[2]);
@@ -2160,23 +2063,6 @@ namespace _OLC2_Proyecto2.Ejecucion
                                 re.labelFalse = labelF;
                                 re.ifC3D = labelC3D(condF1, condF2, ">");
                                 return re;
-                                /*
-                                double val1 = double.Parse(condF1.Valor);
-                                double val2 = double.Parse(condF2.Valor);
-
-                                if (val1 > val2)
-                                {
-                                    string tmp = getTemp();
-                                    string c3d = getC3D(tmp, condF1, ">", condF2);
-                                    return new Retorno(tmp, c3d, Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno True
-                                }
-                                else
-                                {
-                                    string tmp = getTemp();
-                                    string c3d = getC3D(tmp, condF1, ">", condF2);
-                                    return new Retorno(tmp, c3d, Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno False
-                                }
-                                */
                             }
                             else if ((condF1.Tipo.Equals(Reservada.Cadena) && condF2.Tipo.Equals(Reservada.Cadena)))     //Si ambos son String
                             {
@@ -2188,22 +2074,6 @@ namespace _OLC2_Proyecto2.Ejecucion
                                 re.labelFalse = labelF;
                                 re.ifC3D = labelC3D(condF1, condF2, ">");
                                 return re;
-                                /*
-                                int v1 = getCantAscii(condF1.Valor);
-                                int v2 = getCantAscii(condF2.Valor);
-
-                                if (v1 > v2)
-                                {
-                                    string tmp = getTemp();
-                                    string c3d = getC3D(tmp, condF1, ">", condF2);
-                                    return new Retorno(tmp, c3d, Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno true
-                                }
-                                else
-                                {
-                                    string tmp = getTemp();
-                                    string c3d = getC3D(tmp, condF1, ">", condF2);
-                                    return new Retorno(tmp, c3d, Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno false
-                                }*/
                             }
                             else // valores no numericos
                             {
@@ -2223,7 +2093,6 @@ namespace _OLC2_Proyecto2.Ejecucion
                         #endregion
 
                     case "COND7": // MakePlusRule(COND7, ToTerm("="), COND8);
-                        Debug.WriteLine("=");
                         #region
                         Retorno condG1 = Condicion(Nodo.ChildNodes[0]);
                         Retorno condG2 = Condicion(Nodo.ChildNodes[2]);
@@ -2243,22 +2112,6 @@ namespace _OLC2_Proyecto2.Ejecucion
                                 re.labelFalse = labelF;
                                 re.ifC3D = labelC3D(condG1, condG2, "==");
                                 return re;
-                                /*
-                                double val1 = double.Parse(condG1.Valor);
-                                double val2 = double.Parse(condG2.Valor);
-
-                                if (val1 == val2)
-                                {
-                                    string tmp = getTemp();
-                                    string c3d = getC3D(tmp, condG1, "==", condG2);
-                                    return new Retorno(tmp, c3d, Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno true
-                                }
-                                else
-                                {
-                                    string tmp = getTemp();
-                                    string c3d = getC3D(tmp, condG1, "==", condG2);
-                                    return new Retorno(tmp, c3d, Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno false
-                                }*/
                             }
                             else if ((condG1.Tipo.Equals(Reservada.Cadena) && condG2.Tipo.Equals(Reservada.Cadena)) ||      //Si ambos son String
                                     (condG1.Tipo.Equals(Reservada.Booleano) && condG2.Tipo.Equals(Reservada.Booleano)))     //Si ambos son Boolean
@@ -2271,23 +2124,6 @@ namespace _OLC2_Proyecto2.Ejecucion
                                 re.labelFalse = labelF;
                                 re.ifC3D = labelC3D(condG1, condG2, "==");
                                 return re;
-                                /*
-                                int v1 = getCantAscii(condG1.Valor);
-                                int v2 = getCantAscii(condG2.Valor);
-
-                                if (v1 == v2)
-                                {
-                                    string tmp = getTemp();
-                                    string c3d = getC3D(tmp, condG1, "==", condG2);
-                                    return new Retorno(tmp, c3d, Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno true
-                                }
-                                else
-                                {
-                                    string tmp = getTemp();
-                                    string c3d = getC3D(tmp, condG1, "==", condG2);
-                                    return new Retorno(tmp, c3d, Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno false
-                                }
-                                */
                             }
                             else // valores no numericos
                             {
@@ -2307,7 +2143,6 @@ namespace _OLC2_Proyecto2.Ejecucion
                     #endregion
 
                     case "COND8": // MakePlusRule(COND8, ToTerm("<>"), EXPRESION);
-                        Debug.WriteLine("<>");
                         #region
                         Retorno condH1 = Condicion(Nodo.ChildNodes[0]);
                         Retorno condH2 = Expresion(Nodo.ChildNodes[2]);
@@ -2327,23 +2162,6 @@ namespace _OLC2_Proyecto2.Ejecucion
                                 re.labelFalse = labelF;
                                 re.ifC3D = labelC3D(condH1, condH2, "!=");
                                 return re;
-                                /*
-                                double val1 = double.Parse(condH1.Valor);
-                                double val2 = double.Parse(condH2.Valor);
-
-                                if (val1 != val2)
-                                {
-                                    string tmp = getTemp();
-                                    string c3d = getC3D(tmp, condH1, "<>", condH2);
-                                    return new Retorno(tmp, c3d, Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno true
-                                }
-                                else
-                                {
-                                    string tmp = getTemp();
-                                    string c3d = getC3D(tmp, condH1, "<>", condH2);
-                                    return new Retorno(tmp, c3d, Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno True
-                                }
-                                */
                             }
                             else if ((condH1.Tipo.Equals(Reservada.Cadena) && condH2.Tipo.Equals(Reservada.Cadena)) ||      //Si ambos son String
                                     (condH1.Tipo.Equals(Reservada.Booleano) && condH2.Tipo.Equals(Reservada.Booleano)))     //Si ambos son Boolean
@@ -2356,23 +2174,6 @@ namespace _OLC2_Proyecto2.Ejecucion
                                 re.labelFalse = labelF;
                                 re.ifC3D = labelC3D(condH1, condH2, "!=");
                                 return re;
-                                /*
-                                int v1 = getCantAscii(condH1.Valor);
-                                int v2 = getCantAscii(condH2.Valor);
-
-                                if (v1 != v2)
-                                {
-                                    string tmp = getTemp();
-                                    string c3d = getC3D(tmp, condH1, "<>", condH2);
-                                    return new Retorno(tmp, c3d, Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno true
-                                }
-                                else
-                                {
-                                    string tmp = getTemp();
-                                    string c3d = getC3D(tmp, condH1, "<>", condH2);
-                                    return new Retorno(tmp, c3d, Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])); //retorno false
-                                }
-                                */
                             }
                             else // valores no numericos
                             {
@@ -2392,27 +2193,31 @@ namespace _OLC2_Proyecto2.Ejecucion
                         #endregion
                 }
             }
-            // ToTerm("not") + COND2
             else if (Nodo.ChildNodes.Count == 2)
             {
                 #region
                 Retorno condB1 = Condicion(Nodo.ChildNodes[1]);
 
-                Debug.WriteLine("Error Semantico-->Imposible evaluar condicion NOT (sin servicio) linea:" + getLinea(Nodo.ChildNodes[0]) + " columna:" + getColumna(Nodo.ChildNodes[0]));
-                lstError.Add(new Error(Reservada.ErrorSemantico, "Imposible evaluar condicion NOT (sin servicio)", getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0])));
-
                 if (condB1 != null)
                 {
                     if (condB1.Tipo.Equals(Reservada.Booleano)) // si es booleano
                     {
-                        if (condB1.Tipo.Equals("True")) // si es true 
+                        string labelT = getEtiqueta();
+                        string labelF = getEtiqueta();
+
+                        Retorno re = new Retorno(Reservada.nulo, Reservada.nulo, Reservada.Booleano, Reservada.nulo, getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0]));
+                        re.labelTrue = labelT;
+                        re.labelFalse = labelF;
+
+                        if (!condB1.Temporal.Equals(Reservada.nulo))
                         {
-                            return new Retorno(condB1.Temporal, condB1.C3D, Reservada.Booleano, "False", getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0])); //retorno False
+                            re.ifC3D = "if(!" + condB1.Temporal + ")";
                         }
                         else
                         {
-                            return new Retorno(condB1.Temporal, condB1.C3D, Reservada.Booleano, "True", getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0])); //retorno True
+                            re.ifC3D = "if(!" + condB1.Valor + ")";
                         }
+                        return re;
                     }
                     else
                     {
@@ -2808,7 +2613,7 @@ namespace _OLC2_Proyecto2.Ejecucion
                             if (sim == null) //Si no existe en mi nivel actual busco en las globales
                             {
                                 sim = cimaG.RetornarSimbolo(id);
-                                Debug.WriteLine(">>> Se busco en las globales <<<");
+                                //Debug.WriteLine(">>> Se busco en las globales <<<");
                             }
 
                             if (sim != null)
@@ -3343,18 +3148,19 @@ namespace _OLC2_Proyecto2.Ejecucion
             rs += ";";
 
             rs += "\n\nvoid print_function() {\n";
+            rs += "L03:\n";
             rs += "N0 = SP + 0;\n";
             rs += "N1 = Stack[(int)N0];\n";
             rs += "N2 = Heap[(int)N1];\n";
-            rs += "L0:\n";
-            rs += "if (N2 != -1) goto L1;\n";
-            rs += "goto L2;\n";
-            rs += "L1:\n";
+            rs += "L00:\n";
+            rs += "if (N2 != -1) goto L01;\n";
+            rs += "goto L02;\n";
+            rs += "L01:\n";
             rs += "printf(\"%c\", (int)N2);\n";
             rs += "N1 = N1 + 1;\n";
             rs += "N2 = Heap[(int)N1];\n";
-            rs += "goto L0;\n";
-            rs += "L2:\n";
+            rs += "goto L00;\n";
+            rs += "L02:\n";
             rs += "return;\n";
             rs += "}\n";
 

@@ -11,7 +11,7 @@ namespace _OLC2_Proyecto2.Ejecucion
         public String Tipo;
         public String TipoDato;
         public Boolean Retorna;
-        public Boolean Detener;
+        public Boolean Detener; //Break
         public List<Simbolo> ts = new List<Simbolo>();
 
         /*
@@ -28,6 +28,11 @@ namespace _OLC2_Proyecto2.Ejecucion
          * Esta variable guarda la etiqueta de salto para break
          */
         public string etiquetaBreak;
+        /*
+         * Esta variable guarda la etiqueta de salto para continue
+         */
+        public string etiquetaContinue;
+        public Boolean Continuar;
 
         public TablaSimbolos(int Nivel, String Tipo, String TipoDato, Boolean Retorna, Boolean Detener, String EtiquetaExit, String EtiquetaBreak)
         {

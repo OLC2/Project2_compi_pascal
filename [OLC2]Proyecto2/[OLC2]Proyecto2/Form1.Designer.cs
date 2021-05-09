@@ -36,7 +36,14 @@ namespace _OLC2_Proyecto2
             this.richTextConsola = new System.Windows.Forms.RichTextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.btnGraficarArbol = new System.Windows.Forms.Button();
-            this.richTxtEjecucion = new System.Windows.Forms.RichTextBox();
+            this.btnOptimizar = new System.Windows.Forms.Button();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.richTxtOptimizacion = new System.Windows.Forms.RichTextBox();
+            this.tabControl1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
             // richTxtEntrada
@@ -56,9 +63,9 @@ namespace _OLC2_Proyecto2
             this.richTxtSalida.BackColor = System.Drawing.SystemColors.MenuText;
             this.richTxtSalida.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.richTxtSalida.ForeColor = System.Drawing.Color.Lime;
-            this.richTxtSalida.Location = new System.Drawing.Point(615, 12);
+            this.richTxtSalida.Location = new System.Drawing.Point(0, 0);
             this.richTxtSalida.Name = "richTxtSalida";
-            this.richTxtSalida.Size = new System.Drawing.Size(544, 402);
+            this.richTxtSalida.Size = new System.Drawing.Size(536, 374);
             this.richTxtSalida.TabIndex = 1;
             this.richTxtSalida.Text = "";
             // 
@@ -68,7 +75,7 @@ namespace _OLC2_Proyecto2
             this.btnAnalizar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAnalizar.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnAnalizar.Image = ((System.Drawing.Image)(resources.GetObject("btnAnalizar.Image")));
-            this.btnAnalizar.Location = new System.Drawing.Point(561, 108);
+            this.btnAnalizar.Location = new System.Drawing.Point(561, 89);
             this.btnAnalizar.Name = "btnAnalizar";
             this.btnAnalizar.Size = new System.Drawing.Size(48, 35);
             this.btnAnalizar.TabIndex = 2;
@@ -82,7 +89,7 @@ namespace _OLC2_Proyecto2
             this.richTextConsola.ForeColor = System.Drawing.Color.Lime;
             this.richTextConsola.Location = new System.Drawing.Point(12, 420);
             this.richTextConsola.Name = "richTextConsola";
-            this.richTextConsola.Size = new System.Drawing.Size(561, 274);
+            this.richTextConsola.Size = new System.Drawing.Size(1147, 274);
             this.richTextConsola.TabIndex = 3;
             this.richTextConsola.Text = "";
             // 
@@ -92,7 +99,7 @@ namespace _OLC2_Proyecto2
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button1.ForeColor = System.Drawing.SystemColors.ControlText;
             this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
-            this.button1.Location = new System.Drawing.Point(561, 158);
+            this.button1.Location = new System.Drawing.Point(561, 199);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(48, 41);
             this.button1.TabIndex = 4;
@@ -105,42 +112,91 @@ namespace _OLC2_Proyecto2
             this.btnGraficarArbol.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnGraficarArbol.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.btnGraficarArbol.Image = ((System.Drawing.Image)(resources.GetObject("btnGraficarArbol.Image")));
-            this.btnGraficarArbol.Location = new System.Drawing.Point(561, 205);
+            this.btnGraficarArbol.Location = new System.Drawing.Point(561, 246);
             this.btnGraficarArbol.Name = "btnGraficarArbol";
             this.btnGraficarArbol.Size = new System.Drawing.Size(48, 52);
             this.btnGraficarArbol.TabIndex = 5;
             this.btnGraficarArbol.UseVisualStyleBackColor = true;
             this.btnGraficarArbol.Click += new System.EventHandler(this.btnGraficarArbol_Click);
             // 
-            // richTxtEjecucion
+            // btnOptimizar
             // 
-            this.richTxtEjecucion.BackColor = System.Drawing.SystemColors.MenuText;
-            this.richTxtEjecucion.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.richTxtEjecucion.ForeColor = System.Drawing.Color.Lime;
-            this.richTxtEjecucion.Location = new System.Drawing.Point(591, 420);
-            this.richTxtEjecucion.Name = "richTxtEjecucion";
-            this.richTxtEjecucion.Size = new System.Drawing.Size(568, 274);
-            this.richTxtEjecucion.TabIndex = 6;
-            this.richTxtEjecucion.Text = "";
-            this.richTxtEjecucion.WordWrap = false;
+            this.btnOptimizar.FlatAppearance.BorderSize = 0;
+            this.btnOptimizar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnOptimizar.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnOptimizar.Image = ((System.Drawing.Image)(resources.GetObject("btnOptimizar.Image")));
+            this.btnOptimizar.Location = new System.Drawing.Point(561, 148);
+            this.btnOptimizar.Name = "btnOptimizar";
+            this.btnOptimizar.Size = new System.Drawing.Size(48, 35);
+            this.btnOptimizar.TabIndex = 6;
+            this.btnOptimizar.UseVisualStyleBackColor = true;
+            this.btnOptimizar.Click += new System.EventHandler(this.btnOptimizar_Click);
+            // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Location = new System.Drawing.Point(615, 12);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(544, 402);
+            this.tabControl1.TabIndex = 7;
+            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.BackColor = System.Drawing.Color.Black;
+            this.tabPage1.Controls.Add(this.richTxtSalida);
+            this.tabPage1.Location = new System.Drawing.Point(4, 24);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(536, 374);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "C3D";
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.BackColor = System.Drawing.Color.Black;
+            this.tabPage2.Controls.Add(this.richTxtOptimizacion);
+            this.tabPage2.ForeColor = System.Drawing.SystemColors.Control;
+            this.tabPage2.Location = new System.Drawing.Point(4, 24);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(536, 374);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Optimizado";
+            // 
+            // richTxtOptimizacion
+            // 
+            this.richTxtOptimizacion.BackColor = System.Drawing.SystemColors.MenuText;
+            this.richTxtOptimizacion.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.richTxtOptimizacion.ForeColor = System.Drawing.Color.Lime;
+            this.richTxtOptimizacion.Location = new System.Drawing.Point(0, 0);
+            this.richTxtOptimizacion.Name = "richTxtOptimizacion";
+            this.richTxtOptimizacion.Size = new System.Drawing.Size(536, 374);
+            this.richTxtOptimizacion.TabIndex = 8;
+            this.richTxtOptimizacion.Text = "";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1171, 706);
-            this.Controls.Add(this.richTxtEjecucion);
+            this.Controls.Add(this.tabControl1);
+            this.Controls.Add(this.btnOptimizar);
             this.Controls.Add(this.btnGraficarArbol);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.richTextConsola);
             this.Controls.Add(this.btnAnalizar);
-            this.Controls.Add(this.richTxtSalida);
             this.Controls.Add(this.richTxtEntrada);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.ForeColor = System.Drawing.SystemColors.Control;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.Text = "COMPI PASCAL";
+            this.tabControl1.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -153,7 +209,11 @@ namespace _OLC2_Proyecto2
         private System.Windows.Forms.RichTextBox richTextConsola;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button btnGraficarArbol;
-        private System.Windows.Forms.RichTextBox richTxtEjecucion;
+        private System.Windows.Forms.Button btnOptimizar;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.RichTextBox richTxtOptimizacion;
     }
 }
 

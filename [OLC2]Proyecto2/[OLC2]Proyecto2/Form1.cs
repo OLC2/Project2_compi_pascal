@@ -14,6 +14,7 @@ using System.Threading;
 using Irony.Parsing;
 using System.Collections;
 using _OLC2_Proyecto2.Arbol;
+using _OLC2_Proyecto2.Optimizacion;
 
 namespace _OLC2_Proyecto2
 {
@@ -22,22 +23,20 @@ namespace _OLC2_Proyecto2
 
         public static RichTextBox Consola;
         public static RichTextBox Salida;
-        public static RichTextBox Impresiones;
         Analisis analisis = new Analisis();
+        Controlador controlador = new Controlador();
 
         public Form1()
         {
             InitializeComponent();
             Consola = richTextConsola;
             Salida = richTxtSalida;
-            Impresiones = richTxtEjecucion;
         }
 
         private void btnAnalizar_Click(object sender, EventArgs e)
         {
             richTextConsola.Clear();
             richTxtSalida.Clear();
-            richTxtEjecucion.Clear();
 
             Boolean resultado = analisis.esCadenaValida(richTxtEntrada.Text);
 
@@ -47,6 +46,7 @@ namespace _OLC2_Proyecto2
                 Consola.AppendText("Analisis Exitoso!\n");
                 
                 analisis.EjecutarAccionesPerronas();
+                tabControl1.SelectedIndex = 0;
             }
             else
             {
@@ -147,6 +147,30 @@ namespace _OLC2_Proyecto2
             }
 
             return r;
+        }
+
+        private void btnOptimizar_Click(object sender, EventArgs e)
+        {
+            Boolean resultado = controlador.esCadenaValida(richTxtSalida.Text);
+
+            if (resultado)
+            {
+                //MessageBox.Show("Analisis Exitoso");
+                Consola.AppendText("Analisis de C3D Exitoso!\n");
+
+                controlador.iniciarOptimizacion();
+                tabControl1.SelectedIndex = 1;
+            }
+            else
+            {
+                MessageBox.Show("C3D contiene errores lexicos o sintacticos");
+                controlador.erroesOptimizacion();
+            }
+        }
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
