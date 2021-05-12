@@ -10,10 +10,10 @@ namespace _OLC2_Proyecto2.Optimizacion
         public string Instruccion;
         public ParseTreeNode Nodo;
 
-        Sentencia(string Instruccion, ParseTreeNode Nodo)
+        public Sentencia(string Instruccion, ParseTreeNode Nodo)
         {
             this.Instruccion = Instruccion;
-            this.Nodo = Nodo
+            this.Nodo = Nodo;
         }
     }
 

@@ -23,6 +23,7 @@ namespace _OLC2_Proyecto2
 
         public static RichTextBox Consola;
         public static RichTextBox Salida;
+        public static RichTextBox Optimizacion;
         Analisis analisis = new Analisis();
         Controlador controlador = new Controlador();
 
@@ -31,6 +32,7 @@ namespace _OLC2_Proyecto2
             InitializeComponent();
             Consola = richTextConsola;
             Salida = richTxtSalida;
+            Optimizacion = richTxtOptimizacion;
         }
 
         private void btnAnalizar_Click(object sender, EventArgs e)

@@ -43,6 +43,7 @@ namespace _OLC2_Proyecto2.Ejecucion
         private int ApuntadorHP = -1;
 
         private string cadC3D = "";
+        private GraficarTS graficarts;
 
         //private int ContadorParams = 0;
         private int nivelActual = 1; //Este controla el nivel que se estara consultando para crear, buscar y modificar las variables locales dentro de metodos, condiciones, ciclos, etc...
@@ -59,7 +60,7 @@ namespace _OLC2_Proyecto2.Ejecucion
 
             //isRetornoG = false;
 
-            TablaSimbolos varg = new TablaSimbolos(0, Reservada.variable, Reservada.nulo, false, false, Reservada.nulo, Reservada.nulo);
+            TablaSimbolos varg = new TablaSimbolos(0, "main", Reservada.variable, Reservada.nulo, false, false, Reservada.nulo, Reservada.nulo);
             pilaSimbolos.Push(varg);
             cimaG = varg;
 
@@ -465,7 +466,7 @@ namespace _OLC2_Proyecto2.Ejecucion
                         {
                             string l_return = getEtiqueta();
 
-                            TablaSimbolos proc = new TablaSimbolos(1, Reservada.Procedure, Reservada.nulo, true, false, l_return, Reservada.nulo); //Esto depende de si es VOID
+                            TablaSimbolos proc = new TablaSimbolos(1, Reservada.Procedure, id, Reservada.nulo, true, false, l_return, Reservada.nulo); //Esto depende de si es VOID
                             pilaSimbolos.Push(proc);
                             cima = proc; //Estableciendo la tabla de simbolos cima
                             nivelActual++; //Estableciendo el nivel actual
@@ -509,7 +510,7 @@ namespace _OLC2_Proyecto2.Ejecucion
                         {
                             string l_return = getEtiqueta();
 
-                            TablaSimbolos proc = new TablaSimbolos(1, Reservada.Procedure, Reservada.nulo, true, false, l_return, Reservada.nulo); //Esto depende de si es VOID
+                            TablaSimbolos proc = new TablaSimbolos(1, Reservada.Procedure, id, Reservada.nulo, true, false, l_return, Reservada.nulo); //Esto depende de si es VOID
                             pilaSimbolos.Push(proc);
                             cima = proc; //Estableciendo la tabla de simbolos cima
                             nivelActual++; //Estableciendo el nivel actual
@@ -566,7 +567,7 @@ namespace _OLC2_Proyecto2.Ejecucion
                         {
                             string l_return = getEtiqueta();
 
-                            TablaSimbolos fun = new TablaSimbolos(1, Reservada.Funcion, funct2.getTipo(), true, false, l_return, Reservada.nulo); //Esto depende de si es VOID
+                            TablaSimbolos fun = new TablaSimbolos(1, Reservada.Funcion, id, funct2.getTipo(), true, false, l_return, Reservada.nulo); //Esto depende de si es VOID
                             pilaSimbolos.Push(fun);
                             cima = fun; //Estableciendo la tabla de simbolos cima
                             nivelActual++; //Estableciendo el nivel actual
@@ -612,7 +613,7 @@ namespace _OLC2_Proyecto2.Ejecucion
                         {
                             string l_return = getEtiqueta();
 
-                            TablaSimbolos fun = new TablaSimbolos(1, Reservada.Funcion, funct2.getTipo(), true, false, l_return, Reservada.nulo); //Esto depende de si es VOID
+                            TablaSimbolos fun = new TablaSimbolos(1, Reservada.Funcion, id, funct2.getTipo(), true, false, l_return, Reservada.nulo); //Esto depende de si es VOID
                             pilaSimbolos.Push(fun);
                             cima = fun; //Estableciendo la tabla de simbolos cima
                             nivelActual++; //Estableciendo el nivel actual
@@ -867,7 +868,11 @@ namespace _OLC2_Proyecto2.Ejecucion
                         break;
                     case "ESTRUCTURA":
                         #region
-                        if (Nodo.ChildNodes.Count == 2)
+                        foreach (ParseTreeNode hijo in Nodo.ChildNodes)
+                        {
+                            varLocales(hijo);
+                        }
+                        /*if (Nodo.ChildNodes.Count == 2)
                         {
                             varLocales(Nodo.ChildNodes[0]); // ChildNodes[0] --> ESTRUCTURA
                             varLocales(Nodo.ChildNodes[1]); // ChildNodes[1] --> BLOQUE
@@ -875,7 +880,7 @@ namespace _OLC2_Proyecto2.Ejecucion
                         else
                         {
                             varLocales(Nodo.ChildNodes[0]); // ChildNodes[0] --> BLOQUE
-                        }
+                        }*/
                         #endregion
                         break;
                     case "BLOQUE":
@@ -1084,7 +1089,7 @@ namespace _OLC2_Proyecto2.Ejecucion
                 #region
                 string l_return = getEtiqueta();
 
-                TablaSimbolos program = new TablaSimbolos(1, Reservada.Program, Reservada.nulo, false, false, l_return, Reservada.nulo); //Esto depende de si es VOID
+                TablaSimbolos program = new TablaSimbolos(1, Reservada.Program, "main", Reservada.nulo, false, false, l_return, Reservada.nulo); //Esto depende de si es VOID
                 pilaSimbolos.Push(program);
                 cima = program; //Estableciendo la tabla de simbolos cima
                 nivelActual = 1; //Estableciendo el nivel actual
@@ -1183,131 +1188,167 @@ namespace _OLC2_Proyecto2.Ejecucion
                                 //id + ToTerm(":=") + CONDICION + puntocoma
                                 #region
                                 string id4 = Nodo.ChildNodes[0].Token.Value.ToString();
+                                
+                                Retorno ret = Condicion(Nodo.ChildNodes[2]);
 
-                                Simbolo var = RetornarSimbolo(id4); //Busco en mi nivel actual
-
-                                if (var == null) //Si no existe en mi nivel actual busco en las globales
+                                if (id4.Equals(cima.Nombre))
                                 {
-                                    var = cimaG.RetornarSimbolo(id4);
-                                    //Debug.WriteLine(">>> Se busco en las globales <<<");
-                                }
-
-                                if (var != null) //Si la variable existe
-                                {
-                                    Retorno ret = Condicion(Nodo.ChildNodes[2]);
-
-                                    if (ret != null)
-                                    {
-                                        if (ret.Tipo.Equals(var.Tipo)) //Si son del mismo tipo se pueden asignar (variable con variable)
+                                    if (cima.Retorna) 
+                                    { 
+                                        if(ret != null)
                                         {
-                                            if(var.ApuntadorAbsoluto == -1 && var.ApuntadorRelativo != -1) //Significa que esta en una funcion o procedimiento
+                                            if (!ret.Tipo.Equals(Reservada.Cadena))
                                             {
-                                                if (var.Tipo.Equals(Reservada.Booleano))
-                                                {
-                                                    string lbltmp = getEtiqueta(); //Temporal de salida
-
-                                                    string tmp = getTemp();
-                                                    ret.Temporal = Reservada.nulo;
-                                                    cadC3D += ret.labelTrue + ":\n";                       //True
-                                                    ret.Valor = "1";
-                                                    setStack(tmp, var.ApuntadorRelativo + "", ret, id4);
-                                                    cadC3D += "goto" + lbltmp + ":\n";
-                                                    cadC3D += ret.labelFalse + ":\n";                       //False
-                                                    ret.Valor = "0";
-                                                    setStack(tmp, var.ApuntadorRelativo + "", ret, id4);
-                                                    cadC3D += lbltmp + ":\n";
-                                                }
-                                                else
-                                                {
-                                                    string tmp = getTemp();
-                                                    setStack(tmp, var.ApuntadorRelativo + "", ret, id4);
-                                                }
-                                            }
-                                            else //Significa que esta en el main
-                                            {
-                                                if (var.Tipo.Equals(Reservada.Booleano))
-                                                {
-                                                    var.Valor = "1"; // Asignamos el nuevo valor al id
-                                                    setStack(var.ApuntadorAbsoluto + "", ret, id4);
-                                                    cadC3D += "goto " + ret.labelFalse + ":\n";
-                                                    var.Valor = "0";
-                                                    setStack(var.ApuntadorAbsoluto + "", ret, id4);
-                                                }
-                                                else
-                                                {
-                                                    var.Valor = ret.Valor; // Asignamos el nuevo valor al id
-                                                    setStack(var.ApuntadorAbsoluto + "", ret, id4);
-                                                }
-                                            }                                            
-                                        }
-                                        #region ASIGNACION DE ARREGLO A ARREGLO
-                                        /*
-                                        else if (ret.Tipo.Equals(Reservada.arreglo) && var.TipoObjeto.Equals(Reservada.arreglo))
-                                        {
-                                            Simbolo arregloAsignar = RetornarSimbolo(ret.Valor); // ret.Valor contiene el nombre del arreglo a asignar
-
-                                            if (arregloAsignar == null) //Si no existe en mi nivel actual busco en las globales
-                                            {
-                                                arregloAsignar = cimaG.RetornarSimbolo(ret.Valor);
-                                                Debug.WriteLine(">>> Se busco en las globalbes <<<");
-                                            }
-                                            Debug.WriteLine(">>> SE RECONOCIO ASIGNACION DE ARREGLOS PRRONES <<<");
-
-                                            if (arregloAsignar != null)
-                                            {
-                                                Debug.WriteLine(">>> SE RECONOCIO ASIGNACION DE ARREGLOS PRRONES <<<");
-                                                Debug.WriteLine("Se asigno ARREGLO: " + id + " --> " + ret.Valor + " (" + ret.Tipo + ")");
-                                                if (arregloAsignar.Tipo.Equals(var.Tipo))
-                                                {
-                                                    if (var.Arreglo.Count >= arregloAsignar.Arreglo.Count)
-                                                    {
-                                                        int i = 0;
-                                                        foreach (Celda cel in arregloAsignar.Arreglo)
-                                                        {
-                                                            var.Arreglo.ElementAt(i).valor = arregloAsignar.Arreglo.ElementAt(i).valor;
-                                                            i++;
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        int i = 0;
-                                                        foreach (Celda cel in var.Arreglo)
-                                                        {
-                                                            var.Arreglo.ElementAt(i).valor = arregloAsignar.Arreglo.ElementAt(i).valor;
-                                                            i++;
-                                                        }
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    Debug.WriteLine("Error Semantico-->Asignacion no valida, tipo de dato incorrecto linea:" + getLinea(Nodo.ChildNodes[0]) + " columna:" + getColumna(Nodo.ChildNodes[0]));
-                                                    lstError.Add(new Error(Reservada.ErrorSemantico, "Asignacion no valida, tipo de dato incorrecto", getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0])));
-                                                }
+                                                setStack("SP", ret, "Return");
+                                                cadC3D += "goto " + cima.etiquetaExit + ";\n";
                                             }
                                             else
                                             {
-                                                Debug.WriteLine("Error Semantico-->Asignacion no valida de arreglo linea:" + getLinea(Nodo.ChildNodes[0]) + " columna:" + getColumna(Nodo.ChildNodes[0]));
-                                                lstError.Add(new Error(Reservada.ErrorSemantico, "Asignacion no valida de arreglo", getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0])));
+                                                //Cuando viene Exit('valor');
+                                                int apHP = newApuntadorHP();
+                                                string tmp1 = getTemp();
+                                                stringToHeap(tmp1, apHP, ret.Valor);
+                                                setStack("SP", new Retorno(tmp1, Reservada.nulo, ret.Tipo, ret.Valor, ret.Linea, ret.Columna), "Return");
+                                                cadC3D += "goto " + cima.etiquetaExit + ";\n";
                                             }
                                         }
-                                        */
-                                        #endregion
                                         else
                                         {
-                                            Debug.WriteLine("Error Semantico-->Asignacion no valida, tipo de dato incorrecto linea:" + getLinea(Nodo.ChildNodes[0]) + " columna:" + getColumna(Nodo.ChildNodes[0]));
-                                            lstError.Add(new Error(Reservada.ErrorSemantico, "Asignacion no valida, tipo de dato incorrecto", getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0])));
+                                            Console.WriteLine("Error Semantico-->Retono de expresion incorrecta linea:" + getLinea(Nodo.ChildNodes[0]) + " columna:" + getColumna(Nodo.ChildNodes[0]));
+                                            lstError.Add(new Error(Reservada.ErrorSemantico, "Retono de expresion incorrecta", getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0])));
                                         }
                                     }
                                     else
                                     {
-                                        Debug.WriteLine("Error Semantico-->Asignacion no valida, expresion incorrecta linea:" + getLinea(Nodo.ChildNodes[0]) + " columna:" + getColumna(Nodo.ChildNodes[0]));
-                                        lstError.Add(new Error(Reservada.ErrorSemantico, "Asignacion no valida, expresion incorrecta", getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0])));
+                                        Debug.WriteLine("Error Semantico-->Instruccion Exit no valida linea:" + getLinea(Nodo.ChildNodes[0]) + " columna:" + getColumna(Nodo.ChildNodes[0]));
+                                        lstError.Add(new Error(Reservada.ErrorSemantico, "Instruccion Exit no valida", getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0])));
                                     }
                                 }
-                                else
-                                {
-                                    Debug.WriteLine("Error Semantico-->Variable " + id4 + " no existente linea:" + getLinea(Nodo.ChildNodes[0]) + " columna:" + getColumna(Nodo.ChildNodes[0]));
-                                    lstError.Add(new Error(Reservada.ErrorSemantico, "Variable " + id4 + " no existente", getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0])));
+                                else 
+                                { 
+                                    Simbolo var = RetornarSimbolo(id4); //Busco en mi nivel actual
+
+                                    if (var == null) //Si no existe en mi nivel actual busco en las globales
+                                    {
+                                        var = cimaG.RetornarSimbolo(id4);
+                                        //Debug.WriteLine(">>> Se busco en las globales <<<");
+                                    }
+
+                                    if (var != null) //Si la variable existe
+                                    {
+                                        if (ret != null)
+                                        {
+                                            if (ret.Tipo.Equals(var.Tipo)) //Si son del mismo tipo se pueden asignar (variable con variable)
+                                            {
+                                                if (var.ApuntadorAbsoluto == -1 && var.ApuntadorRelativo != -1) //Significa que esta en una funcion o procedimiento
+                                                {
+                                                    if (var.Tipo.Equals(Reservada.Booleano))
+                                                    {
+                                                        string lbltmp = getEtiqueta(); //Temporal de salida
+
+                                                        string tmp = getTemp();
+                                                        ret.Temporal = Reservada.nulo;
+                                                        cadC3D += ret.labelTrue + ":\n";                       //True
+                                                        ret.Valor = "1";
+                                                        setStack(tmp, var.ApuntadorRelativo + "", ret, id4);
+                                                        cadC3D += "goto" + lbltmp + ":\n";
+                                                        cadC3D += ret.labelFalse + ":\n";                       //False
+                                                        ret.Valor = "0";
+                                                        setStack(tmp, var.ApuntadorRelativo + "", ret, id4);
+                                                        cadC3D += lbltmp + ":\n";
+                                                    }
+                                                    else
+                                                    {
+                                                        string tmp = getTemp();
+                                                        setStack(tmp, var.ApuntadorRelativo + "", ret, id4);
+                                                    }
+                                                }
+                                                else //Significa que esta en el main
+                                                {
+                                                    if (var.Tipo.Equals(Reservada.Booleano))
+                                                    {
+                                                        var.Valor = "1"; // Asignamos el nuevo valor al id
+                                                        setStack(var.ApuntadorAbsoluto + "", ret, id4);
+                                                        cadC3D += "goto " + ret.labelFalse + ":\n";
+                                                        var.Valor = "0";
+                                                        setStack(var.ApuntadorAbsoluto + "", ret, id4);
+                                                    }
+                                                    else
+                                                    {
+                                                        var.Valor = ret.Valor; // Asignamos el nuevo valor al id
+                                                        setStack(var.ApuntadorAbsoluto + "", ret, id4);
+                                                    }
+                                                }
+                                            }
+                                            #region ASIGNACION DE ARREGLO A ARREGLO
+                                            /*
+                                            else if (ret.Tipo.Equals(Reservada.arreglo) && var.TipoObjeto.Equals(Reservada.arreglo))
+                                            {
+                                                Simbolo arregloAsignar = RetornarSimbolo(ret.Valor); // ret.Valor contiene el nombre del arreglo a asignar
+
+                                                if (arregloAsignar == null) //Si no existe en mi nivel actual busco en las globales
+                                                {
+                                                    arregloAsignar = cimaG.RetornarSimbolo(ret.Valor);
+                                                    Debug.WriteLine(">>> Se busco en las globalbes <<<");
+                                                }
+                                                Debug.WriteLine(">>> SE RECONOCIO ASIGNACION DE ARREGLOS PRRONES <<<");
+
+                                                if (arregloAsignar != null)
+                                                {
+                                                    Debug.WriteLine(">>> SE RECONOCIO ASIGNACION DE ARREGLOS PRRONES <<<");
+                                                    Debug.WriteLine("Se asigno ARREGLO: " + id + " --> " + ret.Valor + " (" + ret.Tipo + ")");
+                                                    if (arregloAsignar.Tipo.Equals(var.Tipo))
+                                                    {
+                                                        if (var.Arreglo.Count >= arregloAsignar.Arreglo.Count)
+                                                        {
+                                                            int i = 0;
+                                                            foreach (Celda cel in arregloAsignar.Arreglo)
+                                                            {
+                                                                var.Arreglo.ElementAt(i).valor = arregloAsignar.Arreglo.ElementAt(i).valor;
+                                                                i++;
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            int i = 0;
+                                                            foreach (Celda cel in var.Arreglo)
+                                                            {
+                                                                var.Arreglo.ElementAt(i).valor = arregloAsignar.Arreglo.ElementAt(i).valor;
+                                                                i++;
+                                                            }
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        Debug.WriteLine("Error Semantico-->Asignacion no valida, tipo de dato incorrecto linea:" + getLinea(Nodo.ChildNodes[0]) + " columna:" + getColumna(Nodo.ChildNodes[0]));
+                                                        lstError.Add(new Error(Reservada.ErrorSemantico, "Asignacion no valida, tipo de dato incorrecto", getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0])));
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    Debug.WriteLine("Error Semantico-->Asignacion no valida de arreglo linea:" + getLinea(Nodo.ChildNodes[0]) + " columna:" + getColumna(Nodo.ChildNodes[0]));
+                                                    lstError.Add(new Error(Reservada.ErrorSemantico, "Asignacion no valida de arreglo", getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0])));
+                                                }
+                                            }
+                                            */
+                                            #endregion
+                                            else
+                                            {
+                                                Debug.WriteLine("Error Semantico-->Asignacion no valida, tipo de dato incorrecto linea:" + getLinea(Nodo.ChildNodes[0]) + " columna:" + getColumna(Nodo.ChildNodes[0]));
+                                                lstError.Add(new Error(Reservada.ErrorSemantico, "Asignacion no valida, tipo de dato incorrecto", getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0])));
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Debug.WriteLine("Error Semantico-->Asignacion no valida, expresion incorrecta linea:" + getLinea(Nodo.ChildNodes[0]) + " columna:" + getColumna(Nodo.ChildNodes[0]));
+                                            lstError.Add(new Error(Reservada.ErrorSemantico, "Asignacion no valida, expresion incorrecta", getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0])));
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Debug.WriteLine("Error Semantico-->Variable " + id4 + " no existente linea:" + getLinea(Nodo.ChildNodes[0]) + " columna:" + getColumna(Nodo.ChildNodes[0]));
+                                        lstError.Add(new Error(Reservada.ErrorSemantico, "Variable " + id4 + " no existente", getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0])));
+                                    }
                                 }
                                 #endregion
                             }
@@ -1350,6 +1391,7 @@ namespace _OLC2_Proyecto2.Ejecucion
                                  * ToTerm("write") + parentA + ASIGNAR_PARAMETRO + parentC + puntocoma
                                  * ToTerm("writeln") + parentA + ASIGNAR_PARAMETRO + parentC + puntocoma
                                  * id + parentA + ASIGNAR_PARAMETRO + parentC + puntocoma
+                                 * ToTerm("graficar_ts") + parentA + cadena + parentC + puntocoma
                                  */
                             #region
                             switch (Nodo.ChildNodes[0].Term.Name)
@@ -1364,7 +1406,7 @@ namespace _OLC2_Proyecto2.Ejecucion
                                     string lblLoop = getEtiqueta(); //Etiqueta para mantener el ciclo repeat
                                     cadC3D += lblLoop + ":\n";
 
-                                    TablaSimbolos dowhilee = new TablaSimbolos(nivelActual, Reservada.Repeat, Reservada.nulo, cima.Retorna, true, cima.etiquetaExit, lblBreak);
+                                    TablaSimbolos dowhilee = new TablaSimbolos(nivelActual, cima.Tipo, Reservada.Repeat, Reservada.nulo, cima.Retorna, true, cima.etiquetaExit, lblBreak);
                                     dowhilee.etiquetaContinue = lblContinue;
                                     dowhilee.Continuar = true;
                                     pilaSimbolos.Push(dowhilee);
@@ -1426,7 +1468,6 @@ namespace _OLC2_Proyecto2.Ejecucion
                                                 setStack("SP", new Retorno(tmp1,Reservada.nulo,retu.Tipo,retu.Valor,retu.Linea,retu.Columna), "Return");
                                                 cadC3D += "goto " + cima.etiquetaExit + ";\n";
                                             }
-                                            
                                         }
                                         else
                                         {
@@ -1532,6 +1573,36 @@ namespace _OLC2_Proyecto2.Ejecucion
                                     }
                                     #endregion
                                     break;
+                                case "graficar_ts":
+                                    //ToTerm("graficar_ts") + parentA + cadena + parentC + puntocoma
+                                    #region
+                                    try
+                                    {
+                                        string nombre = Nodo.ChildNodes[2].Token.Value.ToString();
+                                        graficarts = new GraficarTS(nombre);
+
+                                        foreach (TablaSimbolos ts in pilaSimbolos)
+                                        {
+                                            foreach(Simbolo sim in ts.ts)
+                                            {
+                                                if(sim.ApuntadorAbsoluto != -1)
+                                                {
+                                                    graficarts.addSimbolo(ts.Tipo, ts.Nombre, sim.Nombre, sim.ApuntadorAbsoluto + "");
+                                                }
+                                                else
+                                                {
+                                                    graficarts.addSimbolo(ts.Tipo, ts.Nombre, sim.Nombre, sim.ApuntadorRelativo + "");
+                                                }
+                                            }
+                                        }
+                                        graficarts.Graficar();
+                                    }
+                                    catch(Exception e)
+                                    {
+                                        Debug.WriteLine("**Error, Generacion de Tabla de Simbolos");
+                                    }
+                                    #endregion
+                                    break;
                             }
                             #endregion
                             break;
@@ -1549,7 +1620,7 @@ namespace _OLC2_Proyecto2.Ejecucion
                                     {
                                         if (cond8.Tipo.Equals(Reservada.Booleano)) // Si la condicion es booleana
                                         {
-                                            TablaSimbolos iff = new TablaSimbolos(nivelActual, Reservada.Iff, Reservada.nulo, cima.Retorna, cima.Detener, cima.etiquetaExit, cima.etiquetaBreak);
+                                            TablaSimbolos iff = new TablaSimbolos(nivelActual, cima.Tipo, Reservada.Iff, Reservada.nulo, cima.Retorna, cima.Detener, cima.etiquetaExit, cima.etiquetaBreak);
                                             iff.Continuar = cima.Continuar;
                                             iff.etiquetaContinue = cima.etiquetaContinue;
                                             pilaSimbolos.Push(iff);
@@ -1593,7 +1664,7 @@ namespace _OLC2_Proyecto2.Ejecucion
                                         {
                                             //string lblBreak = getEtiqueta(); //Etiqueta de salto de break, tambien para el final de while
                                             
-                                            TablaSimbolos whilee = new TablaSimbolos(nivelActual, Reservada.Whilee, Reservada.nulo, cima.Retorna, true, cima.etiquetaExit, cond7.labelFalse);
+                                            TablaSimbolos whilee = new TablaSimbolos(nivelActual, cima.Tipo, Reservada.Whilee, Reservada.nulo, cima.Retorna, true, cima.etiquetaExit, cond7.labelFalse);
                                             whilee.etiquetaContinue = lblContinue;
                                             whilee.Continuar = true;
                                             pilaSimbolos.Push(whilee);
@@ -1633,15 +1704,124 @@ namespace _OLC2_Proyecto2.Ejecucion
                         case 11:
                             //ToTerm("for") + id + ToTerm(":=") + TERMINALES + ToTerm("to") + TERMINALES + ToTerm("do") + ToTerm("begin") + SENTENCIAS + ToTerm("end") + puntocoma
                             //ToTerm("if") + CONDICION + ToTerm("then") + ToTerm("begin") + SENTENCIAS + ToTerm("end") + ToTerm("else") + ToTerm("begin") + SENTENCIAS + ToTerm("end") + puntocoma
+                            //ToTerm("case") + TERMINALES + ToTerm("of") + LSTCASE + ToTerm("else") + ToTerm("begin") + SENTENCIAS + ToTerm("end") + puntocoma + ToTerm("end") + puntocoma
                             #region
                             switch (Nodo.ChildNodes[0].Term.Name)
                             {
                                 case "for":
                                     //ToTerm("for") + id + ToTerm(":=") + TERMINALES + ToTerm("to") + TERMINALES + ToTerm("do") + ToTerm("begin") + SENTENCIAS + ToTerm("end") + puntocoma
                                     #region
+                                    cadC3D += "//===================== Inicio de for ====================\n";
+                                    
                                     String id15 = Nodo.ChildNodes[1].Token.Value.ToString();
                                     Simbolo var15 = RetornarSimbolo(id15);
 
+                                    if (var15 == null) //Si no existe en mi nivel actual busco en las globales
+                                    {
+                                        var15 = cimaG.RetornarSimbolo(id15);
+                                        //Debug.WriteLine(">>> Se busco en las globales <<<");
+                                    }
+
+                                    if (var15 != null) //Si mi asignacion de variable es distinta de null
+                                    {
+                                        Retorno ret15 = Terminales(Nodo.ChildNodes[3]);
+                                        Retorno condicional = Terminales(Nodo.ChildNodes[5]);
+
+                                        if (ret15.Tipo.Equals(var15.Tipo) && (ret15.Tipo.Equals(Reservada.Real) || ret15.Tipo.Equals(Reservada.Entero))) //Si son del mismo tipo se pueden asignar (variable con expresion)
+                                        {
+                                            //var15.Valor = ret15.Valor; jsfdlkjadsfklsafjf  // Asignamos el nuevo valor a la variable
+                                            if (var15.ApuntadorAbsoluto == -1 && var15.ApuntadorRelativo != -1) //Significa que esta en una funcion o procedimiento
+                                            {
+                                                string tmp = getTemp();
+                                                setStack(tmp, var15.ApuntadorRelativo + "", ret15, id15);
+                                            }
+                                            else //Significa que esta en el main
+                                            {
+                                                var15.Valor = ret15.Valor; // Asignamos el nuevo valor al id
+                                                setStack(var15.ApuntadorAbsoluto + "", ret15, id15);
+                                            }
+                                            
+                                            if (condicional.Tipo.Equals(Reservada.Entero) || condicional.Tipo.Equals(Reservada.Real))
+                                            {
+                                                //string lblBreak = getEtiqueta(); //Etiqueta de salto de break, tambien sirve para detener el ciclo while
+                                                string lblContinue = getEtiqueta(); //Etiqueta de salto de continue
+                                                
+                                                //Etiquetas de condicion del for
+                                                string lblTrue = getEtiqueta();
+                                                string lblFalse = getEtiqueta();
+
+                                                cadC3D += lblContinue + ":\n";
+
+                                                TablaSimbolos forr = new TablaSimbolos(nivelActual, cima.Tipo, Reservada.Forr, Reservada.nulo, cima.Retorna, true, cima.etiquetaExit, lblFalse);
+                                                forr.etiquetaContinue = lblContinue;
+                                                forr.Continuar = true;
+                                                pilaSimbolos.Push(forr);
+                                                cima = forr; //Estableciendo la tabla de simbolos cima
+
+                                                string tmp = getTemp();
+                                                string cd3d = "";
+                                                if (var15.ApuntadorAbsoluto == -1 && var15.ApuntadorRelativo != -1) //Significa que esta en una funcion o procedimiento
+                                                {
+                                                    string tmp2 = getTemp();
+                                                    cadC3D += tmp2 + " = SP + " + var15.ApuntadorRelativo + ";\n";
+                                                    cd3d = getStack(tmp, tmp2, id15);
+                                                }
+                                                else //Significa que esta en el main
+                                                {
+                                                    cd3d = getStack(tmp, var15.ApuntadorAbsoluto, id15);
+                                                }
+
+                                                cadC3D += "//==================== if condicional ====================\n";
+                                                
+                                                cadC3D += "if(" + tmp + " <= " + condicional.Valor + ") goto " + lblTrue + ";\n";
+                                                cadC3D += "goto " + lblFalse + ";\n";
+
+                                                cadC3D += "//================== fin if condicional ==================\n";
+                                                cadC3D += lblTrue + ":\n";
+
+                                                RetornoAc ret1 = Sentencias(Nodo.ChildNodes[8]); //Sentencias
+
+                                                //Simbolo inc = IncrementoFor(var15); //Ejecuta operacion incrementa/decremento
+                                                string auxtmp = getTemp();
+                                                cadC3D += auxtmp + " = " + auxtmp + " + 1; //Incrementando\n";
+
+                                                ret15.Temporal = auxtmp;
+                                                if (var15.ApuntadorAbsoluto == -1 && var15.ApuntadorRelativo != -1) //Significa que esta en una funcion o procedimiento
+                                                {
+                                                    string tmp2 = getTemp();
+                                                    setStack(tmp2, var15.ApuntadorRelativo + "", ret15, id15);
+                                                }
+                                                else //Significa que esta en el main
+                                                {
+                                                    var15.Valor = ret15.Valor; // Asignamos el nuevo valor al id
+                                                    setStack(var15.ApuntadorAbsoluto + "", ret15, id15);
+                                                }
+
+                                                cadC3D += "goto " + lblContinue + ";\n";
+                                                cadC3D += lblFalse + ":\n";
+
+                                                pilaSimbolos.Pop(); //Eliminando la tabla de simbolos cima actual
+                                                cima = pilaSimbolos.Peek(); //Estableciendo la nueva tabla de simbolo cima
+
+                                                cadC3D += "//====================== Fin de for ======================\n";
+                                            }
+                                            else
+                                            {
+                                                Console.WriteLine("Error Semantico-->Tipo de condicional incorrecta linea:" + getLinea(Nodo.ChildNodes[4]) + " columna:" + getColumna(Nodo.ChildNodes[4]));
+                                                lstError.Add(new Error(Reservada.ErrorSemantico, "Tipo de condicional incorrecta", getLinea(Nodo.ChildNodes[4]), getColumna(Nodo.ChildNodes[4])));
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("Error Semantico-->Asignacion no valida, tipo de dato incorrecto linea:" + getLinea(Nodo.ChildNodes[2]) + " columna:" + getColumna(Nodo.ChildNodes[2]));
+                                            lstError.Add(new Error(Reservada.ErrorSemantico, "Asignacion no valida, tipo de dato incorrecto", getLinea(Nodo.ChildNodes[2]), getColumna(Nodo.ChildNodes[2])));
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Error Semantico-->Variable no existente linea:" + getLinea(Nodo.ChildNodes[2]) + " columna:" + getColumna(Nodo.ChildNodes[2]));
+                                        lstError.Add(new Error(Reservada.ErrorSemantico, "Variable no existente incorrecta", getLinea(Nodo.ChildNodes[2]), getColumna(Nodo.ChildNodes[2])));
+                                    }
                                     #endregion
                                     break;
                                 case "if":
@@ -1655,7 +1835,7 @@ namespace _OLC2_Proyecto2.Ejecucion
                                     {
                                         if (cond11.Tipo.Equals(Reservada.Booleano)) // Si la condicion es booleana
                                         {
-                                            TablaSimbolos iff = new TablaSimbolos(nivelActual, Reservada.Iff, Reservada.nulo, cima.Retorna, cima.Detener, cima.etiquetaExit, cima.etiquetaBreak);
+                                            TablaSimbolos iff = new TablaSimbolos(nivelActual, cima.Tipo, Reservada.Iff, Reservada.nulo, cima.Retorna, cima.Detener, cima.etiquetaExit, cima.etiquetaBreak);
                                             iff.Continuar = cima.Continuar;
                                             iff.etiquetaContinue = cima.etiquetaContinue;
                                             pilaSimbolos.Push(iff);
@@ -1688,6 +1868,49 @@ namespace _OLC2_Proyecto2.Ejecucion
                                         Console.WriteLine("Error Semantico--> linea:" + getLinea(Nodo.ChildNodes[0]) + " columna:" + getColumna(Nodo.ChildNodes[0]));
                                         lstError.Add(new Error(Reservada.ErrorSemantico, "Condicion invalida", getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0])));
                                     }
+                                    #endregion
+                                    break;
+                                case "case":
+                                    #region
+                                    cadC3D += "//===================== Inicio de case ==================\n";
+
+                                    Retorno cond = Terminales(Nodo.ChildNodes[1]);
+
+                                    if (cond != null)
+                                    {
+                                        if (cond.Tipo.Equals(Reservada.Entero))
+                                        {
+                                            Casos(Nodo.ChildNodes[3], cond);
+
+                                            string lblFalse = getEtiqueta();
+
+                                            TablaSimbolos casse = new TablaSimbolos(nivelActual, cima.Tipo, Reservada.Iff, Reservada.nulo, cima.Retorna, cima.Detener, cima.etiquetaExit, lblFalse);
+                                            //casse.Continuar = cima.Continuar;
+                                            //casse.etiquetaContinue = cima.etiquetaContinue;
+                                            pilaSimbolos.Push(casse);
+                                            cima = casse; //Estableciendo la tabla de simbolos cima
+
+                                            cadC3D += "//Else-case\n";
+                                            Sentencias(Nodo.ChildNodes[6]);
+                                            cadC3D += lblFalse + ":\n";
+
+                                            pilaSimbolos.Pop(); //Eliminando la tabla de simbolos cima actual
+                                            cima = pilaSimbolos.Peek(); //Estableciendo la nueva tabla de simbolo cima
+
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("Error Semantico-->Parametro debe ser numerico linea:" + getLinea(Nodo.ChildNodes[0]) + " columna:" + getColumna(Nodo.ChildNodes[0]));
+                                            lstError.Add(new Error(Reservada.ErrorSemantico, "Parametro debe ser numerico", getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0])));
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Error Semantico-->Parametro de Case invalida linea:" + getLinea(Nodo.ChildNodes[0]) + " columna:" + getColumna(Nodo.ChildNodes[0]));
+                                        lstError.Add(new Error(Reservada.ErrorSemantico, "Parametro de Case invalida", getLinea(Nodo.ChildNodes[0]), getColumna(Nodo.ChildNodes[0])));
+                                    }
+
+                                    cadC3D += "//====================== Fin de case ====================\n";
                                     #endregion
                                     break;
                             }
@@ -1778,7 +2001,7 @@ namespace _OLC2_Proyecto2.Ejecucion
                                     //cadC3D += condB1.labelTrue + ":\n";
                                     cadC3D += condB1.ifC3D + " goto " + condB2.labelTrue + ";\n";
                                     cadC3D += "goto " + condB1.labelFalse + ";\n";
-                                    cadC3D += condB1.labelFalse + ": //Debugiando papi\n";
+                                    cadC3D += condB1.labelFalse + ":\n";
                                     re.labelTrue = condB2.labelTrue;
                                     re.labelFalse = condB1.labelFalse;
                                 }
@@ -2294,7 +2517,7 @@ namespace _OLC2_Proyecto2.Ejecucion
                             }
                             else if (ra1.Tipo.Equals(ra2.Tipo) && !ra1.Tipo.Equals(Reservada.Cadena)) // Si ambos son del mismo tipo y distinto de Cadena
                             {
-                                double suma = double.Parse(GetOperable(ra1).Valor) + double.Parse(GetOperable(ra2).Valor);
+                                double suma = 0;//double.Parse(GetOperable(ra1).Valor) + double.Parse(GetOperable(ra2).Valor);
 
                                 string tmp = getTemp();
                                 string c3d = getC3D(tmp, ra1, "+", ra2);
@@ -2310,21 +2533,21 @@ namespace _OLC2_Proyecto2.Ejecucion
                             }
                             else if ((ra1.Tipo.Equals(Reservada.Booleano) && ra2.Tipo.Equals(Reservada.Real)) || (ra1.Tipo.Equals(Reservada.Real) && ra2.Tipo.Equals(Reservada.Booleano)))
                             {
-                                double suma = double.Parse(GetOperable(ra1).Valor) + double.Parse(GetOperable(ra2).Valor);
+                                double suma = 0;//double.Parse(GetOperable(ra1).Valor) + double.Parse(GetOperable(ra2).Valor);
                                 string tmp = getTemp();
                                 string c3d = getC3D(tmp, ra1, "+", ra2);
                                 return new Retorno(tmp, c3d, Reservada.Real, suma + "", linea1, colum1);
                             }
                             else if ((ra1.Tipo.Equals(Reservada.Booleano) && ra2.Tipo.Equals(Reservada.Entero)) || (ra1.Tipo.Equals(Reservada.Entero) && ra2.Tipo.Equals(Reservada.Booleano)))
                             {
-                                double suma = double.Parse(GetOperable(ra1).Valor) + double.Parse(GetOperable(ra2).Valor);
+                                double suma = 0;//double.Parse(GetOperable(ra1).Valor) + double.Parse(GetOperable(ra2).Valor);
                                 string tmp = getTemp();
                                 string c3d = getC3D(tmp, ra1, "+", ra2);
                                 return new Retorno(tmp, c3d, Reservada.Entero, suma + "", linea1, colum1);
                             }
                             else if ((ra1.Tipo.Equals(Reservada.Real) && ra2.Tipo.Equals(Reservada.Entero)) || (ra1.Tipo.Equals(Reservada.Entero) && ra2.Tipo.Equals(Reservada.Real)))
                             {
-                                double suma = double.Parse(GetOperable(ra1).Valor) + double.Parse(GetOperable(ra2).Valor);
+                                double suma = 0;//double.Parse(GetOperable(ra1).Valor) + double.Parse(GetOperable(ra2).Valor);
                                 string tmp = getTemp();
                                 string c3d = getC3D(tmp, ra1, "+", ra2);
                                 return new Retorno(tmp, c3d, Reservada.Real, suma + "", linea1, colum1);
@@ -2358,7 +2581,7 @@ namespace _OLC2_Proyecto2.Ejecucion
                                 || (ra1.Tipo.Equals(Reservada.Real) && ra2.Tipo.Equals(Reservada.Entero))
                                 || (ra1.Tipo.Equals(Reservada.Entero) && ra2.Tipo.Equals(Reservada.Real)))
                             {
-                                double resta = double.Parse(GetOperable(ra1).Valor) - double.Parse(GetOperable(ra2).Valor);
+                                double resta = 0; //double.Parse(GetOperable(ra1).Valor) - double.Parse(GetOperable(ra2).Valor);
                                 string tmp = getTemp();
                                 string c3d = getC3D(tmp, ra1, "-", ra2);
                                 return new Retorno(tmp, c3d, Reservada.Real, resta + "", linea1, colum1);
@@ -2367,7 +2590,7 @@ namespace _OLC2_Proyecto2.Ejecucion
                                 || (ra1.Tipo.Equals(Reservada.Booleano) && ra2.Tipo.Equals(Reservada.Entero))
                                 || (ra1.Tipo.Equals(Reservada.Entero) && ra2.Tipo.Equals(Reservada.Booleano)))
                             {
-                                double resta = double.Parse(GetOperable(ra1).Valor) - double.Parse(GetOperable(ra2).Valor);
+                                double resta = 0; //double.Parse(GetOperable(ra1).Valor) - double.Parse(GetOperable(ra2).Valor);
                                 string tmp = getTemp();
                                 string c3d = getC3D(tmp, ra1, "-", ra2);
                                 return new Retorno(tmp, c3d, Reservada.Entero, resta + "", linea1, colum1);
@@ -2410,7 +2633,7 @@ namespace _OLC2_Proyecto2.Ejecucion
                                 || (ra1.Tipo.Equals(Reservada.Real) && ra2.Tipo.Equals(Reservada.Entero))
                                 || (ra1.Tipo.Equals(Reservada.Entero) && ra2.Tipo.Equals(Reservada.Real)))
                             {
-                                double mul = double.Parse(GetOperable(ra1).Valor) * double.Parse(GetOperable(ra2).Valor);
+                                double mul = 0; //double.Parse(GetOperable(ra1).Valor) * double.Parse(GetOperable(ra2).Valor);
                                 string tmp = getTemp();
                                 string c3d = getC3D(tmp, ra1, "*", ra2);
                                 return new Retorno(tmp, c3d, Reservada.Real, mul + "", linea1, colum1);
@@ -2419,7 +2642,7 @@ namespace _OLC2_Proyecto2.Ejecucion
                                 || (ra1.Tipo.Equals(Reservada.Booleano) && ra2.Tipo.Equals(Reservada.Entero))
                                 || (ra1.Tipo.Equals(Reservada.Entero) && ra2.Tipo.Equals(Reservada.Booleano)))
                             {
-                                double mul = double.Parse(GetOperable(ra1).Valor) * double.Parse(GetOperable(ra2).Valor);
+                                double mul = 0; //double.Parse(GetOperable(ra1).Valor) * double.Parse(GetOperable(ra2).Valor);
                                 string tmp = getTemp();
                                 string c3d = getC3D(tmp, ra1, "*", ra2);
                                 return new Retorno(tmp, c3d, Reservada.Entero, mul + "", linea1, colum1);
@@ -2465,7 +2688,7 @@ namespace _OLC2_Proyecto2.Ejecucion
                                 || (ra1.Tipo.Equals(Reservada.Booleano) && ra2.Tipo.Equals(Reservada.Entero))
                                 || (ra1.Tipo.Equals(Reservada.Entero) && ra2.Tipo.Equals(Reservada.Booleano)))
                             {
-                                double div = double.Parse(GetOperable(ra1).Valor) / double.Parse(GetOperable(ra2).Valor);
+                                double div = 0; //double.Parse(GetOperable(ra1).Valor) / double.Parse(GetOperable(ra2).Valor);
                                 string tmp = getTemp();
                                 string c3d = getC3D(tmp, ra1, "/", ra2);
                                 return new Retorno(tmp, c3d, Reservada.Real, div + "", linea1, colum1);
@@ -2513,7 +2736,7 @@ namespace _OLC2_Proyecto2.Ejecucion
                                 || (ra1.Tipo.Equals(Reservada.Booleano) && ra2.Tipo.Equals(Reservada.Entero))
                                 || (ra1.Tipo.Equals(Reservada.Entero) && ra2.Tipo.Equals(Reservada.Booleano)))
                             {
-                                double mod = double.Parse(GetOperable(ra1).Valor) % double.Parse(GetOperable(ra2).Valor);
+                                double mod = 0; //double.Parse(GetOperable(ra1).Valor) % double.Parse(GetOperable(ra2).Valor);
                                 string tmp = getTemp();
                                 string c3d = getC3D(tmp, ra1, "%", ra2);
                                 return new Retorno(tmp, c3d, Reservada.Real, mod + "", linea1, colum1);
@@ -2805,6 +3028,66 @@ namespace _OLC2_Proyecto2.Ejecucion
 
             }
             return null;
+        }
+
+        private void Casos(ParseTreeNode Nodo, Retorno cond)
+        {
+            /*
+             * LSTCASE.Rule = LSTCASE + CASE
+                            | CASE
+                CASE.Rule = TERMINALES + ToTerm(":") + ToTerm("begin") + SENTENCIAS + ToTerm("end") + puntocoma;
+             */
+            switch (Nodo.Term.Name)
+            {
+                case "LSTCASE":
+                    foreach(ParseTreeNode hijo in Nodo.ChildNodes)
+                    {
+                        Casos(hijo, cond);
+                    }
+                    break;
+                case "CASE":
+                    #region
+                    Retorno css = Terminales(Nodo.ChildNodes[0]);
+
+                    if(css != null)
+                    {
+                        if (css.Tipo.Equals(Reservada.Entero))
+                        {
+                            string lblTrue = getEtiqueta();
+                            string lblFalse = getEtiqueta();
+
+                            TablaSimbolos casse = new TablaSimbolos(nivelActual, cima.Tipo, Reservada.Iff, Reservada.nulo, cima.Retorna, cima.Detener, cima.etiquetaExit, lblFalse);
+                            //casse.Continuar = cima.Continuar;
+                            //casse.etiquetaContinue = cima.etiquetaContinue;
+                            pilaSimbolos.Push(casse);
+                            cima = casse; //Estableciendo la tabla de simbolos cima
+
+                            
+
+                            cadC3D += "//Case\n";
+                            cadC3D += "if(" + cond.Temporal + "==" + css.Valor + ") goto " + lblTrue + ";\n";
+                            cadC3D += "goto " + lblFalse + ";\n";
+                            cadC3D += lblTrue + ":\n";
+                            Sentencias(Nodo.ChildNodes[3]);
+                            cadC3D += lblFalse + ":\n";
+
+                            pilaSimbolos.Pop(); //Eliminando la tabla de simbolos cima actual
+                            cima = pilaSimbolos.Peek(); //Estableciendo la nueva tabla de simbolo cima
+                        }
+                        else
+                        {
+                            Console.WriteLine("Error Semantico-->Parametro debe ser numerico linea:" + getLinea(Nodo.ChildNodes[1]) + " columna:" + getColumna(Nodo.ChildNodes[1]));
+                            lstError.Add(new Error(Reservada.ErrorSemantico, "Parametro debe ser numerico", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])));
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Error Semantico-->Parametro de Case invalida linea:" + getLinea(Nodo.ChildNodes[1]) + " columna:" + getColumna(Nodo.ChildNodes[1]));
+                        lstError.Add(new Error(Reservada.ErrorSemantico, "Parametro de Case invalida", getLinea(Nodo.ChildNodes[1]), getColumna(Nodo.ChildNodes[1])));
+                    }
+                    #endregion
+                    break;
+            }
         }
 
         private Retorno getCadenaPrint(ParseTreeNode Nodo)

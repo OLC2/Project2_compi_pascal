@@ -9,6 +9,7 @@ namespace _OLC2_Proyecto2.Ejecucion
     {
         public int Nivel;
         public String Tipo;
+        public String Nombre;
         public String TipoDato;
         public Boolean Retorna;
         public Boolean Detener; //Break
@@ -34,10 +35,11 @@ namespace _OLC2_Proyecto2.Ejecucion
         public string etiquetaContinue;
         public Boolean Continuar;
 
-        public TablaSimbolos(int Nivel, String Tipo, String TipoDato, Boolean Retorna, Boolean Detener, String EtiquetaExit, String EtiquetaBreak)
+        public TablaSimbolos(int Nivel, String Tipo, String Nombre, String TipoDato, Boolean Retorna, Boolean Detener, String EtiquetaExit, String EtiquetaBreak)
         {
             this.Nivel = Nivel;
             this.Tipo = Tipo;
+            this.Nombre = Nombre;
             this.TipoDato = TipoDato;
             this.Retorna = Retorna;
             this.Detener = Detener;

@@ -171,7 +171,7 @@ namespace _OLC2_Proyecto2
             //SENTENCIA.ErrorRule = SyntaxError + puntocoma;
             SENTENCIA.Rule = ToTerm("write") + parentA + ASIGNAR_PARAMETRO + parentC + puntocoma
                             | ToTerm("writeln") + parentA + ASIGNAR_PARAMETRO + parentC + puntocoma
-                            | ToTerm("graficar_ts") + parentA + parentC + puntocoma
+                            | ToTerm("graficar_ts") + parentA + cadena + parentC + puntocoma
                             | ToTerm("exit") + parentA + parentC + puntocoma //Retorna el valor por defecto del tipo de dato de retorno de la funcion
                             | ToTerm("exit") + parentA + CONDICION + parentC + puntocoma //Retorna el valor de condicion 
                             | ToTerm("continue") + puntocoma
@@ -179,8 +179,8 @@ namespace _OLC2_Proyecto2
                             | ToTerm("if") + CONDICION + ToTerm("then") + ToTerm("begin") + SENTENCIAS + ToTerm("end") + puntocoma //if
                             | ToTerm("if") + CONDICION + ToTerm("then") + ToTerm("begin") + SENTENCIAS + ToTerm("end") + ToTerm("else") + ToTerm("begin") + SENTENCIAS + ToTerm("end") + puntocoma //if-else
                             //| IF + puntocoma
-                            | ToTerm("case") + CONDICION + ToTerm("of") + LSTCASE + ToTerm("else") + SENTENCIAS + ToTerm("end") + puntocoma //Este usa el Break
-                            | ToTerm("case") + CONDICION + ToTerm("of") + LSTCASE + ToTerm("end") + puntocoma //Este usa el Break
+                            | ToTerm("case") + TERMINALES + ToTerm("of") + LSTCASE + ToTerm("else") + ToTerm("begin") + SENTENCIAS + ToTerm("end") + puntocoma + ToTerm("end") + puntocoma
+                            //| ToTerm("case") + TERMINALES + ToTerm("of") + LSTCASE + ToTerm("end") + puntocoma 
                             | ToTerm("while") + CONDICION + ToTerm("do") + ToTerm("begin") + SENTENCIAS + ToTerm("end") + puntocoma
                             | ToTerm("repeat") + SENTENCIAS + ToTerm("until") + CONDICION + puntocoma
                             | ToTerm("for") + id + ToTerm(":=") + TERMINALES + ToTerm("to") + TERMINALES + ToTerm("do") + ToTerm("begin") + SENTENCIAS + ToTerm("end") + puntocoma
@@ -231,7 +231,7 @@ namespace _OLC2_Proyecto2
                             | CASE
                             ;
 
-            CASE.Rule = ARRAYATRIBS + ToTerm(":") + SENTENCIAS;
+            CASE.Rule = TERMINALES + ToTerm(":") + ToTerm("begin") + SENTENCIAS + ToTerm("end") + puntocoma;
 
             //CONDICIONES
             CONDICION.Rule = CONDICION + ToTerm("and") + COND1

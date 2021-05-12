@@ -72,7 +72,7 @@ namespace _OLC2_Proyecto2.Optimizacion
                             | VARIABLE
                             ;
 
-            VARIABLES.Rule = ToTerm("float") + LSTID + puntocoma
+            VARIABLE.Rule = ToTerm("float") + LSTID + puntocoma
                             | ToTerm("float") + id + corchA + numero + corchC + puntocoma
                             ;
 
